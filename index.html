@@ -25,9 +25,9 @@
         /* Главная сетка */
         .grid-container {
             display: grid;
-            grid-template-columns: 320px 1fr;
+            grid-template-columns: 220px 1fr; /* Фиксированное фото 220px + остаток под имя */
             gap: 1.5rem;
-            max-width: 1000px;
+            max-width: 900px;
             width: 100%;
         }
 
@@ -42,52 +42,43 @@
             justify-content: center;
         }
 
-        /* Фото */
+        /* Фото (строго квадратное) */
+        .card-photo {
+            padding: 0;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+            width: 100%;
+        }
 
-.card-photo {
-    /* grid-row: span 2;  <-- УБИРАЕМ эту строку */
-    padding: 0;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: 1 / 1; /* Гарантирует строгий квадрат (1:1) */
-    width: 100%;
-}
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
 
-.profile-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Заполняет квадрат без искажения пропорций изображения */
-    display: block;
-}
-
-        /* Имя и Профессия */
+        /* Имя и Профессия (справа от фото) */
         .card-header {
             text-align: left;
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: #ffffff;
         }
 
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             color: #106b6e;
             font-weight: 600;
         }
 
-        /* Текстовые блоки (О себе, Опыт работы) */
-        .card-text-block {
+        /* Широкие текстовые блоки (О себе, Опыт работы) */
+        .card-full-width {
+            grid-column: span 2; /* Растягиваем на всю ширину сетки */
             text-align: left;
-        }
-
-        /* Блок опыта растягиваем на всю ширину сетки (2 колонки) */
-        .card-experience {
-            grid-column: span 2;
         }
 
         h2 {
@@ -102,7 +93,7 @@
             font-size: 1.05rem;
             color: #94a3b8;
             line-height: 1.6;
-            white-space: pre-line; /* Сохраняет переносы строк \n из JSON */
+            white-space: pre-line;
         }
 
         /* Мобильная адаптивность */
@@ -111,13 +102,13 @@
                 grid-template-columns: 1fr;
             }
 
-            .card-photo {
-                grid-row: span 1;
-                height: 350px;
+            .card-full-width {
+                grid-column: span 1;
             }
 
-            .card-experience {
-                grid-column: span 1;
+            .card-photo {
+                max-width: 250px;
+                margin: 0 auto;
             }
         }
     </style>
@@ -126,25 +117,25 @@
 
     <div class="grid-container">
         
-        <!-- Карточка: Фото -->
+        <!-- Верхний ряд: Квадратное фото -->
         <div class="card card-photo">
             <img src="photo.jpg" alt="Александер Масюк" class="profile-img">
         </div>
 
-        <!-- Карточка: Имя и Профессия -->
+        <!-- Верхний ряд: Имя и Профессия -->
         <div class="card card-header">
             <h1 id="user-name">...</h1>
             <div class="subtitle" id="user-role">...</div>
         </div>
 
-        <!-- Карточка: О себе -->
-        <div class="card card-text-block">
+        <!-- Нижний блок 1: О себе (широкий) -->
+        <div class="card card-full-width">
             <h2 id="about-title">...</h2>
             <div class="description" id="about-text"></div>
         </div>
 
-        <!-- Карточка: Опыт работы (растянута на всю ширину под фото и информацией) -->
-        <div class="card card-text-block card-experience">
+        <!-- Нижний блок 2: Опыт работы (широкий) -->
+        <div class="card card-full-width">
             <h2 id="experience-title">...</h2>
             <div class="description" id="experience-text"></div>
         </div>
@@ -165,7 +156,6 @@
                 document.getElementById('experience-title').textContent = data.experienceTitle;
                 document.getElementById('experience-text').textContent = data.experienceText;
                 
-                // Динамический заголовок вкладки браузера
                 document.title = `${data.name} — ${data.role}`;
             })
             .catch(error => {
