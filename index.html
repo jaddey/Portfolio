@@ -22,56 +22,117 @@
             padding: 2rem;
         }
 
-        .container {
-            max-width: 800px;
-            text-align: center;
+        /* Главная сетка */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 320px 1fr; /* Левая колонка под фото, правая под контент */
+            grid-template-rows: auto auto;
+            gap: 1.5rem;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        /* Базовый стиль карточек (немного темнее фона + граница) */
+        .card {
+            background-color: #15171c;
+            border: 1px solid #2e333d;
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Карточка 1: Фото (занимает 2 строки по высоте) */
+        .card-photo {
+            grid-row: span 2;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .profile-img {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border: 4px solid #106b6e;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.25);
+            display: block;
+        }
+
+        /* Карточка 2: Имя и Профессия */
+        .card-header {
+            text-align: left;
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
             color: #ffffff;
         }
 
         .subtitle {
-            font-size: 1.35rem;
+            font-size: 1.2rem;
             color: #106b6e;
-            font-weight: 500;
-            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Карточка 3: О себе */
+        .card-about {
+            text-align: left;
+        }
+
+        .card-about h2 {
+            font-size: 1.1rem;
+            color: #106b6e;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         p.description {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             color: #94a3b8;
             line-height: 1.6;
-            max-width: 600px;
-            margin: 0 auto 2rem auto;
+        }
+
+        /* Адаптив для мобильных устройств */
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .card-photo {
+                grid-row: span 1;
+                height: 350px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Укажи точное имя своего файла с фото вместо photo.jpg -->
-        <img src="photo.jpg" alt="Александер Масюк" class="profile-img">
+    <div class="grid-container">
         
-        <h1>Привет! Меня зовут Александер Масюк</h1>
-        <div class="subtitle">Technical Designer</div>
-        
-        <p class="description">
-            Разрабатываю интерактивные презентации, визуальные механики и инструменты на Unity & C#.
-        </p>
+        <!-- Белый блок: Фото -->
+        <div class="card card-photo">
+            <img src="photo.jpg" alt="Александер Масюк" class="profile-img">
+        </div>
+
+        <!-- Жёлтый блок: Имя и Профессия -->
+        <div class="card card-header">
+            <h1>Александер Масюк</h1>
+            <div class="subtitle">Technical Designer</div>
+        </div>
+
+        <!-- Красный блок: О себе -->
+        <div class="card card-about">
+            <h2>О себе</h2>
+            <p class="description">
+                Разрабатываю интерактивные презентации, визуальные механики и инструменты на Unity & C#.
+            </p>
+        </div>
+
     </div>
 
 </body>
