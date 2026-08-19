@@ -20,29 +20,97 @@
             justify-content: center;
             align-items: center;
             padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* Главная сетка */
+        /* --- ФОНОВЫЕ ЭФФЕКТЫ --- */
+        
+        /* 1. Тонкая сетка на фоне */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 2. Плавные светящиеся пятна (Glow Orbs) */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 0;
+            animation: pulse 8s ease-in-out infinite alternate;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: #106b6e;
+            top: -50px;
+            left: -50px;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: #0e4b4e;
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -4s;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1) translate(0, 0);
+                opacity: 0.2;
+            }
+            100% {
+                transform: scale(1.2) translate(30px, -20px);
+                opacity: 0.35;
+            }
+        }
+
+        /* --- СТРУКТУРА И КАРТОЧКИ --- */
+        
         .grid-container {
             display: grid;
-            grid-template-columns: 220px 1fr; /* Фиксированное фото 220px + остаток под имя */
+            grid-template-columns: 220px 1fr;
             gap: 1.5rem;
             max-width: 900px;
             width: 100%;
+            position: relative;
+            z-index: 1; /* Чтобы карточки были над фоном */
         }
 
-        /* Стиль карточек */
+        /* Карточки с эффектом полупрозрачности (Glassmorphism) */
         .card {
-            background-color: #15171c;
-            border: 1px solid #2e333d;
+            background-color: rgba(21, 23, 28, 0.85); /* Легкая прозрачность */
+            backdrop-filter: blur(12px); /* Размытие фона за карточкой */
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             padding: 2rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            transition: transform 0.2s ease, border-color 0.2s ease;
         }
 
-        /* Фото (строго квадратное) */
+        /* Легкий интерактив при наведении на карточки */
+        .card:hover {
+            border-color: rgba(16, 107, 110, 0.5);
+            transform: translateY(-2px);
+        }
+
         .card-photo {
             padding: 0;
             overflow: hidden;
@@ -57,7 +125,6 @@
             display: block;
         }
 
-        /* Имя и Профессия (справа от фото) */
         .card-header {
             text-align: left;
         }
@@ -75,9 +142,8 @@
             font-weight: 600;
         }
 
-        /* Широкие текстовые блоки (О себе, Опыт работы) */
         .card-full-width {
-            grid-column: span 2; /* Растягиваем на всю ширину сетки */
+            grid-column: span 2;
             text-align: left;
         }
 
@@ -96,7 +162,6 @@
             white-space: pre-line;
         }
 
-        /* Мобильная адаптивность */
         @media (max-width: 768px) {
             .grid-container {
                 grid-template-columns: 1fr;
@@ -115,26 +180,27 @@
 </head>
 <body>
 
+    <!-- Фоновые элементы -->
+    <div class="bg-grid"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+
     <div class="grid-container">
         
-        <!-- Верхний ряд: Квадратное фото -->
         <div class="card card-photo">
             <img src="photo.jpg" alt="Александер Масюк" class="profile-img">
         </div>
 
-        <!-- Верхний ряд: Имя и Профессия -->
         <div class="card card-header">
             <h1 id="user-name">...</h1>
             <div class="subtitle" id="user-role">...</div>
         </div>
 
-        <!-- Нижний блок 1: О себе (широкий) -->
         <div class="card card-full-width">
             <h2 id="about-title">...</h2>
             <div class="description" id="about-text"></div>
         </div>
 
-        <!-- Нижний блок 2: Опыт работы (широкий) -->
         <div class="card card-full-width">
             <h2 id="experience-title">...</h2>
             <div class="description" id="experience-text"></div>
@@ -142,20 +208,16 @@
 
     </div>
 
-    <!-- Скрипт подгрузки данных из profile.json -->
     <script>
         fetch('profile.json')
             .then(response => response.json())
             .then(data => {
                 document.getElementById('user-name').textContent = data.name;
                 document.getElementById('user-role').textContent = data.role;
-                
                 document.getElementById('about-title').textContent = data.aboutTitle;
                 document.getElementById('about-text').textContent = data.aboutText;
-                
                 document.getElementById('experience-title').textContent = data.experienceTitle;
                 document.getElementById('experience-text').textContent = data.experienceText;
-                
                 document.title = `${data.name} — ${data.role}`;
             })
             .catch(error => {
