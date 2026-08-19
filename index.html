@@ -24,9 +24,9 @@
             overflow-x: hidden;
         }
 
-/* --- ФОНОВЫЕ ЭФФЕКТЫ --- */
-        
-        /* 1. Точечный узор (Dot Pattern) вместо сетки */
+        /* --- ФОНОВЫЕ ЭФФЕКТЫ --- */
+
+        /* 1. Точечный фоновый узор */
         .bg-dots {
             position: fixed;
             top: 0;
@@ -39,60 +39,58 @@
             z-index: 0;
         }
 
-        /* 2. Плавные светящиеся пятна (Glow Orbs) */
+        /* 2. Размытые сферы (анимируются при скролле через JS) */
         .glow-orb {
             position: fixed;
             border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.25;
+            filter: blur(110px);
+            opacity: 0.28;
             pointer-events: none;
             z-index: 0;
-            animation: pulse 8s ease-in-out infinite alternate;
+            will-change: transform;
+            transition: transform 0.1s ease-out;
         }
 
         .orb-1 {
-            width: 400px;
-            height: 400px;
+            width: 450px;
+            height: 450px;
             background: #106b6e;
             top: -50px;
-            left: -50px;
+            left: -100px;
         }
 
         .orb-2 {
             width: 500px;
             height: 500px;
             background: #0e4b4e;
-            bottom: -100px;
-            right: -100px;
-            animation-delay: -4s;
+            top: 350px;
+            right: -120px;
         }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(1) translate(0, 0);
-                opacity: 0.2;
-            }
-            100% {
-                transform: scale(1.2) translate(30px, -20px);
-                opacity: 0.35;
-            }
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: #106b6e;
+            bottom: -50px;
+            left: 15%;
         }
-        /* --- СТРУКТУРА И КАРТОЧКИ --- */
-        
+
+        /* --- СТРУКТУРА И СЕТКА --- */
+
         .grid-container {
             display: grid;
-            grid-template-columns: 220px 1fr;
+            grid-template-columns: 220px 1fr; /* Левая колонка под фото 220px, правая под имя */
             gap: 1.5rem;
             max-width: 900px;
             width: 100%;
             position: relative;
-            z-index: 1; /* Чтобы карточки были над фоном */
+            z-index: 1;
         }
 
-        /* Карточки с эффектом полупрозрачности (Glassmorphism) */
+        /* Карточки с эффектом матового стекла */
         .card {
-            background-color: rgba(21, 23, 28, 0.85); /* Легкая прозрачность */
-            backdrop-filter: blur(12px); /* Размытие фона за карточкой */
+            background-color: rgba(21, 23, 28, 0.85);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             padding: 2rem;
@@ -102,12 +100,12 @@
             transition: transform 0.2s ease, border-color 0.2s ease;
         }
 
-        /* Легкий интерактив при наведении на карточки */
         .card:hover {
             border-color: rgba(16, 107, 110, 0.5);
             transform: translateY(-2px);
         }
 
+        /* Квадратное фото */
         .card-photo {
             padding: 0;
             overflow: hidden;
@@ -122,6 +120,7 @@
             display: block;
         }
 
+        /* Имя и профессия */
         .card-header {
             text-align: left;
         }
@@ -139,6 +138,7 @@
             font-weight: 600;
         }
 
+        /* Широкие блоки (О себе, Опыт работы) */
         .card-full-width {
             grid-column: span 2;
             text-align: left;
@@ -156,9 +156,10 @@
             font-size: 1.05rem;
             color: #94a3b8;
             line-height: 1.6;
-            white-space: pre-line;
+            white-space: pre-line; /* Поддержка переносов строк из JSON */
         }
 
+        /* Адаптивность для мобильных экранов */
         @media (max-width: 768px) {
             .grid-container {
                 grid-template-columns: 1fr;
@@ -178,26 +179,31 @@
 <body>
 
     <!-- Фоновые элементы -->
-    <div class="bg-grid"></div>
+    <div class="bg-dots"></div>
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
 
     <div class="grid-container">
         
+        <!-- Фото (Квадратное) -->
         <div class="card card-photo">
             <img src="photo.jpg" alt="Александер Масюк" class="profile-img">
         </div>
 
+        <!-- Имя и Профессия -->
         <div class="card card-header">
             <h1 id="user-name">...</h1>
             <div class="subtitle" id="user-role">...</div>
         </div>
 
+        <!-- О себе (Широкая карточка) -->
         <div class="card card-full-width">
             <h2 id="about-title">...</h2>
             <div class="description" id="about-text"></div>
         </div>
 
+        <!-- Опыт работы (Широкая карточка) -->
         <div class="card card-full-width">
             <h2 id="experience-title">...</h2>
             <div class="description" id="experience-text"></div>
@@ -205,21 +211,45 @@
 
     </div>
 
+    <!-- Скрипт загрузки данных и эффекта прокручки -->
     <script>
+        // 1. Загружаем текст из profile.json
         fetch('profile.json')
             .then(response => response.json())
             .then(data => {
                 document.getElementById('user-name').textContent = data.name;
                 document.getElementById('user-role').textContent = data.role;
+                
                 document.getElementById('about-title').textContent = data.aboutTitle;
                 document.getElementById('about-text').textContent = data.aboutText;
+                
                 document.getElementById('experience-title').textContent = data.experienceTitle;
                 document.getElementById('experience-text').textContent = data.experienceText;
+                
                 document.title = `${data.name} — ${data.role}`;
             })
             .catch(error => {
-                console.error('Ошибка загрузки данных:', error);
+                console.error('Ошибка загрузки данных из profile.json:', error);
             });
+
+        // 2. Эффект движения фоновых сфер при скролле
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+
+            const orb1 = document.querySelector('.orb-1');
+            const orb2 = document.querySelector('.orb-2');
+            const orb3 = document.querySelector('.orb-3');
+
+            if (orb1) {
+                orb1.style.transform = `translateY(${scrolled * 0.25}px) scale(${1 + scrolled * 0.0004})`;
+            }
+            if (orb2) {
+                orb2.style.transform = `translateY(${-scrolled * 0.2}px) scale(${1 - scrolled * 0.0002})`;
+            }
+            if (orb3) {
+                orb3.style.transform = `translate(${scrolled * 0.15}px, ${-scrolled * 0.15}px)`;
+            }
+        });
     </script>
 
 </body>
