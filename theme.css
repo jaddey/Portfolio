@@ -1,0 +1,20 @@
+:root {
+    /* Основные фоны */
+    --bg-main: #1b1e24;
+    --card-bg: rgba(21, 23, 28, 0.85);
+    
+    /* Акцентные цвета (бирюзовый) */
+    --accent-primary: #106b6e;
+    --accent-hover: #148f93;
+    --accent-dark: #0e4b4e;
+    
+    /* Текст */
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+    --text-body: #f8fafc;
+    
+    /* Границы и прозрачные элементы */
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(16, 107, 110, 0.5);
+    --bg-dots-color: rgba(255, 255, 255, 0.08);
+}
