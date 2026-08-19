@@ -26,7 +26,7 @@
 
         /* --- ФОНОВЫЕ ЭФФЕКТЫ --- */
 
-        /* 1. Точечный фоновый узор */
+        /* Точечный фоновый узор */
         .bg-dots {
             position: fixed;
             top: 0;
@@ -39,47 +39,56 @@
             z-index: 0;
         }
 
-        /* 2. Размытые сферы (анимируются при скролле через JS) */
-        .glow-orb {
+        /* Чёткие геометрические фигуры с эффектом Параллакса */
+        .bg-shape {
             position: fixed;
-            border-radius: 50%;
-            filter: blur(110px);
-            opacity: 0.28;
             pointer-events: none;
             z-index: 0;
             will-change: transform;
             transition: transform 0.1s ease-out;
+            filter: blur(25px); /* Уменьшили размытие, чтобы сделать фигуры четче */
+            opacity: 0.35;
+            border: 1px solid rgba(255, 255, 255, 0.15); /* Тонкий контур для акцента */
         }
 
-        .orb-1 {
-            width: 450px;
-            height: 450px;
-            background: #106b6e;
-            top: -50px;
-            left: -100px;
+        /* 1. Наклонный куб / ромб */
+        .shape-1 {
+            width: 320px;
+            height: 320px;
+            background: linear-gradient(135deg, #106b6e, rgba(16, 107, 110, 0.2));
+            top: 5%;
+            left: -80px;
+            border-radius: 24px;
+            transform: rotate(25deg);
         }
 
-        .orb-2 {
-            width: 500px;
-            height: 500px;
-            background: #0e4b4e;
-            top: 350px;
-            right: -120px;
+        /* 2. Капсула / плашка */
+        .shape-2 {
+            width: 400px;
+            height: 200px;
+            background: linear-gradient(135deg, #0e4b4e, #106b6e);
+            top: 40%;
+            right: -100px;
+            border-radius: 100px;
+            transform: rotate(-15deg);
         }
 
-        .orb-3 {
-            width: 350px;
-            height: 350px;
-            background: #106b6e;
-            bottom: -50px;
+        /* 3. Маленький аккуратный ромб снизу */
+        .shape-3 {
+            width: 220px;
+            height: 220px;
+            background: linear-gradient(45deg, #106b6e, transparent);
+            bottom: -40px;
             left: 15%;
+            border-radius: 16px;
+            transform: rotate(45deg);
         }
 
         /* --- СТРУКТУРА И СЕТКА --- */
 
         .grid-container {
             display: grid;
-            grid-template-columns: 220px 1fr; /* Левая колонка под фото 220px, правая под имя */
+            grid-template-columns: 220px 1fr;
             gap: 1.5rem;
             max-width: 900px;
             width: 100%;
@@ -156,10 +165,10 @@
             font-size: 1.05rem;
             color: #94a3b8;
             line-height: 1.6;
-            white-space: pre-line; /* Поддержка переносов строк из JSON */
+            white-space: pre-line;
         }
 
-        /* Адаптивность для мобильных экранов */
+        /* Адаптивность под мобильные устройства */
         @media (max-width: 768px) {
             .grid-container {
                 grid-template-columns: 1fr;
@@ -180,9 +189,9 @@
 
     <!-- Фоновые элементы -->
     <div class="bg-dots"></div>
-    <div class="glow-orb orb-1"></div>
-    <div class="glow-orb orb-2"></div>
-    <div class="glow-orb orb-3"></div>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
 
     <div class="grid-container">
         
@@ -197,13 +206,13 @@
             <div class="subtitle" id="user-role">...</div>
         </div>
 
-        <!-- О себе (Широкая карточка) -->
+        <!-- О себе -->
         <div class="card card-full-width">
             <h2 id="about-title">...</h2>
             <div class="description" id="about-text"></div>
         </div>
 
-        <!-- Опыт работы (Широкая карточка) -->
+        <!-- Опыт работы -->
         <div class="card card-full-width">
             <h2 id="experience-title">...</h2>
             <div class="description" id="experience-text"></div>
@@ -211,9 +220,9 @@
 
     </div>
 
-    <!-- Скрипт загрузки данных и эффекта прокручки -->
+    <!-- Скрипт загрузки данных и параллакс-эффекта -->
     <script>
-        // 1. Загружаем текст из profile.json
+        // 1. Подгрузка данных из profile.json
         fetch('profile.json')
             .then(response => response.json())
             .then(data => {
@@ -229,25 +238,25 @@
                 document.title = `${data.name} — ${data.role}`;
             })
             .catch(error => {
-                console.error('Ошибка загрузки данных из profile.json:', error);
+                console.error('Ошибка загрузки профиля:', error);
             });
 
-        // 2. Эффект движения фоновых сфер при скролле
+        // 2. Параллакс геометрических фигур с легким вращением при скролле
         window.addEventListener('scroll', () => {
             const scrolled = window.scrollY;
 
-            const orb1 = document.querySelector('.orb-1');
-            const orb2 = document.querySelector('.orb-2');
-            const orb3 = document.querySelector('.orb-3');
+            const shape1 = document.querySelector('.shape-1');
+            const shape2 = document.querySelector('.shape-2');
+            const shape3 = document.querySelector('.shape-3');
 
-            if (orb1) {
-                orb1.style.transform = `translateY(${scrolled * 0.25}px) scale(${1 + scrolled * 0.0004})`;
+            if (shape1) {
+                shape1.style.transform = `translateY(${scrolled * 0.3}px) rotate(${25 + scrolled * 0.05}deg)`;
             }
-            if (orb2) {
-                orb2.style.transform = `translateY(${-scrolled * 0.2}px) scale(${1 - scrolled * 0.0002})`;
+            if (shape2) {
+                shape2.style.transform = `translateY(${-scrolled * 0.2}px) rotate(${-15 - scrolled * 0.03}deg)`;
             }
-            if (orb3) {
-                orb3.style.transform = `translate(${scrolled * 0.15}px, ${-scrolled * 0.15}px)`;
+            if (shape3) {
+                shape3.style.transform = `translate(${scrolled * 0.1}px, ${-scrolled * 0.15}px) rotate(${45 + scrolled * 0.08}deg)`;
             }
         });
     </script>
