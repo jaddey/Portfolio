@@ -26,7 +26,6 @@
 
         /* --- ФОНОВЫЕ ЭФФЕКТЫ --- */
 
-        /* Точечный фоновый узор */
         .bg-dots {
             position: fixed;
             top: 0;
@@ -39,7 +38,7 @@
             z-index: 0;
         }
 
-        /* Геометрические фигуры большого размера и высокой прозрачности */
+        /* Геометрические фигуры */
         .bg-shape {
             position: fixed;
             pointer-events: none;
@@ -47,11 +46,10 @@
             will-change: transform;
             transition: transform 0.1s ease-out;
             filter: blur(20px);
-            opacity: 0.18; /* Повышенная прозрачность */
+            opacity: 0.18;
             border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
-        /* 1. Огромный скошенный квадрат слева */
         .shape-1 {
             width: 650px;
             height: 650px;
@@ -62,7 +60,6 @@
             transform: rotate(20deg);
         }
 
-        /* 2. Широкая прямоугольная капсула справа (пересекает первую) */
         .shape-2 {
             width: 750px;
             height: 380px;
@@ -73,15 +70,22 @@
             transform: rotate(-25deg);
         }
 
-        /* 3. Большой ромб по центру-снизу (пересекает капсулу при скролле) */
-        .shape-3 {
-            width: 500px;
-            height: 500px;
-            background: linear-gradient(45deg, rgba(16, 107, 110, 0.7), transparent);
-            bottom: -150px;
-            left: 20%;
-            border-radius: 32px;
-            transform: rotate(45deg);
+        /* Сложная форма: Геймпад DualShock */
+        .shape-controller {
+            position: fixed;
+            top: 15%;
+            right: 5%;
+            width: 480px;
+            height: auto;
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform;
+            transition: transform 0.1s ease-out;
+            filter: blur(12px); /* Чуть меньше размытия для узнаваемости силуэта */
+            opacity: 0.15;
+            fill: url(#controller-gradient);
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 1.5;
         }
 
         /* --- СТРУКТУРА И СЕТКА --- */
@@ -96,7 +100,6 @@
             z-index: 1;
         }
 
-        /* Карточки с эффектом матового стекла */
         .card {
             background-color: rgba(21, 23, 28, 0.85);
             backdrop-filter: blur(12px);
@@ -114,7 +117,6 @@
             transform: translateY(-2px);
         }
 
-        /* Квадратное фото */
         .card-photo {
             padding: 0;
             overflow: hidden;
@@ -129,7 +131,6 @@
             display: block;
         }
 
-        /* Имя и профессия */
         .card-header {
             text-align: left;
         }
@@ -147,7 +148,6 @@
             font-weight: 600;
         }
 
-        /* Широкие блоки (О себе, Опыт работы) */
         .card-full-width {
             grid-column: span 2;
             text-align: left;
@@ -168,7 +168,6 @@
             white-space: pre-line;
         }
 
-        /* Адаптивность для мобильных устройств */
         @media (max-width: 768px) {
             .grid-container {
                 grid-template-columns: 1fr;
@@ -182,6 +181,11 @@
                 max-width: 250px;
                 margin: 0 auto;
             }
+            
+            .shape-controller {
+                width: 300px;
+                right: -50px;
+            }
         }
     </style>
 </head>
@@ -191,28 +195,34 @@
     <div class="bg-dots"></div>
     <div class="bg-shape shape-1"></div>
     <div class="bg-shape shape-2"></div>
-    <div class="bg-shape shape-3"></div>
+
+    <!-- Векторный силуэт геймпада DualShock -->
+    <svg class="shape-controller" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="controller-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#106b6e" stop-opacity="0.9" />
+                <stop offset="100%" stop-color="#0e4b4e" stop-opacity="0.2" />
+            </linearGradient>
+        </defs>
+        <path d="M362.7 128H149.3C102.5 128 64 166.5 64 213.3v132.3c0 23 15.6 42.6 38.2 47.1l42.7 8.5c18.5 3.7 36.3-8.8 39.5-27.4l11.2-64.8c1.8-10.4 10.8-18 21.4-18h78.1c10.5 0 19.6 7.6 21.4 18l11.2 64.8c3.2 18.6 21 31.1 39.5 27.4l42.7-8.5c22.6-4.5 38.2-24.1 38.2-47.1V213.3c0-46.8-38.5-85.3-85.3-85.3zM170.7 245.3h-21.3v21.3c0 5.9-4.8 10.7-10.7 10.7s-10.7-4.8-10.7-10.7v-21.3h-21.3c-5.9 0-10.7-4.8-10.7-10.7s4.8-10.7 10.7-10.7h21.3v-21.3c0-5.9 4.8-10.7 10.7-10.7s10.7 4.8 10.7 10.7v21.3h21.3c5.9 0 10.7 4.8 10.7 10.7s-4.8 10.7-10.7 10.7zm170.7 21.3c-11.8 0-21.3-9.5-21.3-21.3s9.5-21.3 21.3-21.3 21.3 9.5 21.3 21.3-9.5 21.3-21.3 21.3zm42.7-42.7c-11.8 0-21.3-9.5-21.3-21.3s9.5-21.3 21.3-21.3 21.3 9.5 21.3 21.3-9.5 21.3-21.3 21.3z"/>
+    </svg>
 
     <div class="grid-container">
         
-        <!-- Фото (Квадратное) -->
         <div class="card card-photo">
             <img src="photo.jpg" alt="Александер Масюк" class="profile-img">
         </div>
 
-        <!-- Имя и Профессия -->
         <div class="card card-header">
             <h1 id="user-name">...</h1>
             <div class="subtitle" id="user-role">...</div>
         </div>
 
-        <!-- О себе -->
         <div class="card card-full-width">
             <h2 id="about-title">...</h2>
             <div class="description" id="about-text"></div>
         </div>
 
-        <!-- Опыт работы -->
         <div class="card card-full-width">
             <h2 id="experience-title">...</h2>
             <div class="description" id="experience-text"></div>
@@ -220,34 +230,29 @@
 
     </div>
 
-    <!-- Скрипт загрузки данных и параллакс-эффекта -->
     <script>
-        // 1. Подгрузка данных из profile.json
         fetch('profile.json')
             .then(response => response.json())
             .then(data => {
                 document.getElementById('user-name').textContent = data.name;
                 document.getElementById('user-role').textContent = data.role;
-                
                 document.getElementById('about-title').textContent = data.aboutTitle;
                 document.getElementById('about-text').textContent = data.aboutText;
-                
                 document.getElementById('experience-title').textContent = data.experienceTitle;
                 document.getElementById('experience-text').textContent = data.experienceText;
-                
                 document.title = `${data.name} — ${data.role}`;
             })
             .catch(error => {
                 console.error('Ошибка загрузки профиля:', error);
             });
 
-        // 2. Параллакс с плавной динамикой наложения фигур
+        // Параллакс с учетом геймпада
         window.addEventListener('scroll', () => {
             const scrolled = window.scrollY;
 
             const shape1 = document.querySelector('.shape-1');
             const shape2 = document.querySelector('.shape-2');
-            const shape3 = document.querySelector('.shape-3');
+            const controller = document.querySelector('.shape-controller');
 
             if (shape1) {
                 shape1.style.transform = `translateY(${scrolled * 0.25}px) rotate(${20 + scrolled * 0.03}deg)`;
@@ -255,8 +260,9 @@
             if (shape2) {
                 shape2.style.transform = `translateY(${-scrolled * 0.18}px) rotate(${-25 - scrolled * 0.02}deg)`;
             }
-            if (shape3) {
-                shape3.style.transform = `translate(${scrolled * 0.12}px, ${-scrolled * 0.2}px) rotate(${45 + scrolled * 0.05}deg)`;
+            if (controller) {
+                // Геймпад плавно смещается по вертикали и слегка поворачивается
+                controller.style.transform = `translateY(${-scrolled * 0.15}px) rotate(${-12 + scrolled * 0.04}deg)`;
             }
         });
     </script>
