@@ -26,7 +26,6 @@
         .grid-container {
             display: grid;
             grid-template-columns: 320px 1fr;
-            grid-template-rows: auto auto;
             gap: 1.5rem;
             max-width: 1000px;
             width: 100%;
@@ -78,12 +77,17 @@
             font-weight: 600;
         }
 
-        /* О себе */
-        .card-about {
+        /* Текстовые блоки (О себе, Опыт работы) */
+        .card-text-block {
             text-align: left;
         }
 
-        .card-about h2 {
+        /* Блок опыта растягиваем на всю ширину сетки (2 колонки) */
+        .card-experience {
+            grid-column: span 2;
+        }
+
+        h2 {
             font-size: 1.1rem;
             color: #106b6e;
             margin-bottom: 0.75rem;
@@ -91,10 +95,11 @@
             letter-spacing: 0.05em;
         }
 
-        p.description {
+        .description {
             font-size: 1.05rem;
             color: #94a3b8;
             line-height: 1.6;
+            white-space: pre-line; /* Сохраняет переносы строк \n из JSON */
         }
 
         /* Мобильная адаптивность */
@@ -106,6 +111,10 @@
             .card-photo {
                 grid-row: span 1;
                 height: 350px;
+            }
+
+            .card-experience {
+                grid-column: span 1;
             }
         }
     </style>
@@ -126,9 +135,15 @@
         </div>
 
         <!-- Карточка: О себе -->
-        <div class="card card-about">
+        <div class="card card-text-block">
             <h2 id="about-title">...</h2>
-            <p class="description" id="about-text">...</p>
+            <div class="description" id="about-text"></div>
+        </div>
+
+        <!-- Карточка: Опыт работы (растянута на всю ширину под фото и информацией) -->
+        <div class="card card-text-block card-experience">
+            <h2 id="experience-title">...</h2>
+            <div class="description" id="experience-text"></div>
         </div>
 
     </div>
@@ -140,10 +155,14 @@
             .then(data => {
                 document.getElementById('user-name').textContent = data.name;
                 document.getElementById('user-role').textContent = data.role;
+                
                 document.getElementById('about-title').textContent = data.aboutTitle;
                 document.getElementById('about-text').textContent = data.aboutText;
                 
-                // Также динамически меняем заголовок вкладки браузера
+                document.getElementById('experience-title').textContent = data.experienceTitle;
+                document.getElementById('experience-text').textContent = data.experienceText;
+                
+                // Динамический заголовок вкладки браузера
                 document.title = `${data.name} — ${data.role}`;
             })
             .catch(error => {
