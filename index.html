@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Портфолио — Technical Designer</title>
+    
+    <!-- Подключение файла с палитрой цветов -->
+    <link rel="stylesheet" href="theme.css">
+
     <style>
         * {
             margin: 0;
@@ -12,8 +16,8 @@
         }
 
         body {
-            background-color: #1b1e24;
-            color: #f8fafc;
+            background-color: var(--bg-main);
+            color: var(--text-body);
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             display: flex;
@@ -30,7 +34,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+            background-image: radial-gradient(var(--bg-dots-color) 1px, transparent 1px);
             background-size: 24px 24px;
             pointer-events: none;
             z-index: 0;
@@ -47,9 +51,9 @@
         .shape-square {
             filter: blur(20px);
             opacity: 0.18;
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid var(--border-color);
             border-radius: 32px;
-            background: linear-gradient(135deg, rgba(14, 75, 78, 0.9), rgba(14, 75, 78, 0.1));
+            background: linear-gradient(135deg, var(--accent-dark), transparent);
         }
 
         .square-1 {
@@ -71,7 +75,7 @@
         .shape-gamepad {
             filter: blur(12px);
             opacity: 0.16;
-            stroke: rgba(255, 255, 255, 0.2);
+            stroke: var(--border-color);
             stroke-width: 1.5;
         }
 
@@ -102,9 +106,9 @@
         }
 
         .card {
-            background-color: rgba(21, 23, 28, 0.85);
+            background-color: var(--card-bg);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 2rem;
             display: flex;
@@ -114,7 +118,7 @@
         }
 
         .card:hover {
-            border-color: rgba(16, 107, 110, 0.5);
+            border-color: var(--border-hover);
         }
 
         .card-photo {
@@ -139,12 +143,12 @@
             font-size: 2.2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         .subtitle {
             font-size: 1.25rem;
-            color: #106b6e;
+            color: var(--accent-primary);
             font-weight: 600;
         }
 
@@ -153,7 +157,6 @@
             text-align: left;
         }
 
-        /* Шапка collapsible-карточки */
         .card-title-row {
             display: flex;
             align-items: center;
@@ -165,7 +168,7 @@
 
         h2 {
             font-size: 1.1rem;
-            color: #106b6e;
+            color: var(--accent-primary);
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin: 0;
@@ -175,17 +178,16 @@
             width: 20px;
             height: 20px;
             fill: none;
-            stroke: #106b6e;
+            stroke: var(--accent-primary);
             stroke-width: 2.5;
             stroke-linecap: round;
             stroke-linejoin: round;
             transition: transform 0.3s ease;
         }
 
-        /* Поведение текста при сворачивании */
         .description {
             font-size: 1.05rem;
-            color: #94a3b8;
+            color: var(--text-secondary);
             line-height: 1.6;
             white-space: pre-line;
             max-height: 2000px;
@@ -196,18 +198,17 @@
         }
 
         .description a {
-            color: #106b6e;
+            color: var(--accent-primary);
             text-decoration: none;
             font-weight: 500;
             transition: color 0.2s ease;
         }
 
         .description a:hover {
-            color: #148f93;
+            color: var(--accent-hover);
             text-decoration: underline;
         }
 
-        /* Состояние "Свернуто" */
         .card-collapsible.collapsed .description {
             max-height: 0;
             opacity: 0;
@@ -218,7 +219,6 @@
             transform: rotate(180deg);
         }
 
-        /* Плавающая кнопка быстрого сворачивания */
         .floating-collapse-btn {
             position: fixed;
             bottom: 2rem;
@@ -226,9 +226,9 @@
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            background-color: rgba(16, 107, 110, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
+            background-color: var(--accent-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -247,7 +247,7 @@
         }
 
         .floating-collapse-btn:hover {
-            background-color: #148f93;
+            background-color: var(--accent-hover);
             transform: translateY(-2px);
         }
 
@@ -297,12 +297,12 @@
     <svg style="width:0; height:0; position:absolute;" aria-hidden="true">
         <defs>
             <linearGradient id="gamepad-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#106b6e" stop-opacity="0.9" />
-                <stop offset="100%" stop-color="#106b6e" stop-opacity="0.1" />
+                <stop offset="0%" stop-color="var(--accent-primary)" stop-opacity="0.9" />
+                <stop offset="100%" stop-color="var(--accent-primary)" stop-opacity="0.1" />
             </linearGradient>
             <linearGradient id="gamepad-grad-2" x1="100%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#106b6e" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#106b6e" stop-opacity="0.2" />
+                <stop offset="0%" stop-color="var(--accent-primary)" stop-opacity="0.8" />
+                <stop offset="100%" stop-color="var(--accent-primary)" stop-opacity="0.2" />
             </linearGradient>
         </defs>
     </svg>
@@ -330,7 +330,6 @@
             <div class="subtitle" id="user-role">...</div>
         </div>
 
-        <!-- О себе -->
         <div class="card card-full-width card-collapsible" id="card-about">
             <div class="card-title-row" onclick="toggleCard('card-about')">
                 <h2 id="about-title">...</h2>
@@ -339,7 +338,6 @@
             <div class="description" id="about-text"></div>
         </div>
 
-        <!-- Опыт работы -->
         <div class="card card-full-width card-collapsible" id="card-experience">
             <div class="card-title-row" onclick="toggleCard('card-experience')">
                 <h2 id="experience-title">...</h2>
@@ -348,7 +346,6 @@
             <div class="description" id="experience-text"></div>
         </div>
 
-        <!-- Контакты -->
         <div class="card card-full-width card-collapsible" id="card-contacts">
             <div class="card-title-row" onclick="toggleCard('card-contacts')">
                 <h2 id="contacts-title">...</h2>
@@ -359,7 +356,6 @@
 
     </div>
 
-    <!-- Плавающая кнопка для сворачивания преобладающего блока -->
     <button class="floating-collapse-btn" id="floatingBtn" onclick="collapseMostVisibleCard()" title="Свернуть активный блок">
         <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </button>
@@ -390,14 +386,12 @@
                 console.error('Ошибка загрузки profile.json:', error);
             });
 
-        // Переключение свернутого/развернутого состояния отдельной карточки
         function toggleCard(cardId) {
             const card = document.getElementById(cardId);
             card.classList.toggle('collapsed');
             updateFloatingButton();
         }
 
-        // Вычисление карточки, занимающей больше всего места в окне
         function getMostVisibleExpandedCard() {
             const cards = document.querySelectorAll('.card-collapsible:not(.collapsed)');
             let maxVisibleHeight = 0;
@@ -418,7 +412,6 @@
             return { targetCard, maxVisibleHeight };
         }
 
-        // Обновление видимости плавающей кнопки
         function updateFloatingButton() {
             const btn = document.getElementById('floatingBtn');
             const { targetCard, maxVisibleHeight } = getMostVisibleExpandedCard();
@@ -430,7 +423,6 @@
             }
         }
 
-        // Сворачивание преобладающей карточки при клике на плавающую кнопку
         function collapseMostVisibleCard() {
             const { targetCard } = getMostVisibleExpandedCard();
             if (targetCard) {
@@ -439,7 +431,6 @@
             }
         }
 
-        // Отслеживание скролла для эффектов параллакса и видимости кнопки
         window.addEventListener('scroll', () => {
             const scrolled = window.scrollY;
 
