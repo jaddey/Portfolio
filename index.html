@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Александер Масюк — Technical Designer</title>
+    <title>Портфолио — Technical Designer</title>
     <style>
         * {
             margin: 0;
@@ -25,14 +25,14 @@
         /* Главная сетка */
         .grid-container {
             display: grid;
-            grid-template-columns: 320px 1fr; /* Левая колонка под фото, правая под контент */
+            grid-template-columns: 320px 1fr;
             grid-template-rows: auto auto;
             gap: 1.5rem;
             max-width: 1000px;
             width: 100%;
         }
 
-        /* Базовый стиль карточек (немного темнее фона + граница) */
+        /* Стиль карточек */
         .card {
             background-color: #15171c;
             border: 1px solid #2e333d;
@@ -43,7 +43,7 @@
             justify-content: center;
         }
 
-        /* Карточка 1: Фото (занимает 2 строки по высоте) */
+        /* Фото */
         .card-photo {
             grid-row: span 2;
             padding: 0;
@@ -60,7 +60,7 @@
             display: block;
         }
 
-        /* Карточка 2: Имя и Профессия */
+        /* Имя и Профессия */
         .card-header {
             text-align: left;
         }
@@ -78,7 +78,7 @@
             font-weight: 600;
         }
 
-        /* Карточка 3: О себе */
+        /* О себе */
         .card-about {
             text-align: left;
         }
@@ -97,7 +97,7 @@
             line-height: 1.6;
         }
 
-        /* Адаптив для мобильных устройств */
+        /* Мобильная адаптивность */
         @media (max-width: 768px) {
             .grid-container {
                 grid-template-columns: 1fr;
@@ -114,26 +114,42 @@
 
     <div class="grid-container">
         
-        <!-- Белый блок: Фото -->
+        <!-- Карточка: Фото -->
         <div class="card card-photo">
             <img src="photo.jpg" alt="Александер Масюк" class="profile-img">
         </div>
 
-        <!-- Жёлтый блок: Имя и Профессия -->
+        <!-- Карточка: Имя и Профессия -->
         <div class="card card-header">
-            <h1>Александер Масюк</h1>
-            <div class="subtitle">Technical Designer</div>
+            <h1 id="user-name">...</h1>
+            <div class="subtitle" id="user-role">...</div>
         </div>
 
-        <!-- Красный блок: О себе -->
+        <!-- Карточка: О себе -->
         <div class="card card-about">
-            <h2>О себе</h2>
-            <p class="description">
-                Разрабатываю интерактивные презентации, визуальные механики и инструменты на Unity & C#.
-            </p>
+            <h2 id="about-title">...</h2>
+            <p class="description" id="about-text">...</p>
         </div>
 
     </div>
+
+    <!-- Скрипт подгрузки данных из profile.json -->
+    <script>
+        fetch('profile.json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('user-name').textContent = data.name;
+                document.getElementById('user-role').textContent = data.role;
+                document.getElementById('about-title').textContent = data.aboutTitle;
+                document.getElementById('about-text').textContent = data.aboutText;
+                
+                // Также динамически меняем заголовок вкладки браузера
+                document.title = `${data.name} — ${data.role}`;
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки данных:', error);
+            });
+    </script>
 
 </body>
 </html>
