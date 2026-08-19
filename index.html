@@ -277,13 +277,13 @@
                 document.getElementById('user-role').textContent = data.role;
                 
                 document.getElementById('about-title').textContent = data.aboutTitle;
-                document.getElementById('about-text').textContent = data.aboutText;
+                document.getElementById('about-text').innerText = data.aboutText;
                 
                 document.getElementById('experience-title').textContent = data.experienceTitle;
-                document.getElementById('experience-text').textContent = data.experienceText;
+                document.getElementById('experience-text').innerText = data.experienceText;
                 
                 document.getElementById('contacts-title').textContent = data.contactsTitle;
-                document.getElementById('contacts-text').textContent = data.contactsText;
+                document.getElementById('contacts-text').innerText = data.contactsText;
 
                 document.title = `${data.name} — ${data.role}`;
             })
