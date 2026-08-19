@@ -39,48 +39,48 @@
             z-index: 0;
         }
 
-        /* Чёткие геометрические фигуры с эффектом Параллакса */
+        /* Геометрические фигуры большого размера и высокой прозрачности */
         .bg-shape {
             position: fixed;
             pointer-events: none;
             z-index: 0;
             will-change: transform;
             transition: transform 0.1s ease-out;
-            filter: blur(25px); /* Уменьшили размытие, чтобы сделать фигуры четче */
-            opacity: 0.35;
-            border: 1px solid rgba(255, 255, 255, 0.15); /* Тонкий контур для акцента */
+            filter: blur(20px);
+            opacity: 0.18; /* Повышенная прозрачность */
+            border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
-        /* 1. Наклонный куб / ромб */
+        /* 1. Огромный скошенный квадрат слева */
         .shape-1 {
-            width: 320px;
-            height: 320px;
-            background: linear-gradient(135deg, #106b6e, rgba(16, 107, 110, 0.2));
-            top: 5%;
-            left: -80px;
-            border-radius: 24px;
-            transform: rotate(25deg);
+            width: 650px;
+            height: 650px;
+            background: linear-gradient(135deg, rgba(16, 107, 110, 0.8), rgba(16, 107, 110, 0.05));
+            top: -100px;
+            left: -200px;
+            border-radius: 40px;
+            transform: rotate(20deg);
         }
 
-        /* 2. Капсула / плашка */
+        /* 2. Широкая прямоугольная капсула справа (пересекает первую) */
         .shape-2 {
-            width: 400px;
-            height: 200px;
-            background: linear-gradient(135deg, #0e4b4e, #106b6e);
-            top: 40%;
-            right: -100px;
-            border-radius: 100px;
-            transform: rotate(-15deg);
+            width: 750px;
+            height: 380px;
+            background: linear-gradient(135deg, rgba(14, 75, 78, 0.9), rgba(16, 107, 110, 0.1));
+            top: 250px;
+            right: -180px;
+            border-radius: 180px;
+            transform: rotate(-25deg);
         }
 
-        /* 3. Маленький аккуратный ромб снизу */
+        /* 3. Большой ромб по центру-снизу (пересекает капсулу при скролле) */
         .shape-3 {
-            width: 220px;
-            height: 220px;
-            background: linear-gradient(45deg, #106b6e, transparent);
-            bottom: -40px;
-            left: 15%;
-            border-radius: 16px;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(45deg, rgba(16, 107, 110, 0.7), transparent);
+            bottom: -150px;
+            left: 20%;
+            border-radius: 32px;
             transform: rotate(45deg);
         }
 
@@ -168,7 +168,7 @@
             white-space: pre-line;
         }
 
-        /* Адаптивность под мобильные устройства */
+        /* Адаптивность для мобильных устройств */
         @media (max-width: 768px) {
             .grid-container {
                 grid-template-columns: 1fr;
@@ -241,7 +241,7 @@
                 console.error('Ошибка загрузки профиля:', error);
             });
 
-        // 2. Параллакс геометрических фигур с легким вращением при скролле
+        // 2. Параллакс с плавной динамикой наложения фигур
         window.addEventListener('scroll', () => {
             const scrolled = window.scrollY;
 
@@ -250,13 +250,13 @@
             const shape3 = document.querySelector('.shape-3');
 
             if (shape1) {
-                shape1.style.transform = `translateY(${scrolled * 0.3}px) rotate(${25 + scrolled * 0.05}deg)`;
+                shape1.style.transform = `translateY(${scrolled * 0.25}px) rotate(${20 + scrolled * 0.03}deg)`;
             }
             if (shape2) {
-                shape2.style.transform = `translateY(${-scrolled * 0.2}px) rotate(${-15 - scrolled * 0.03}deg)`;
+                shape2.style.transform = `translateY(${-scrolled * 0.18}px) rotate(${-25 - scrolled * 0.02}deg)`;
             }
             if (shape3) {
-                shape3.style.transform = `translate(${scrolled * 0.1}px, ${-scrolled * 0.15}px) rotate(${45 + scrolled * 0.08}deg)`;
+                shape3.style.transform = `translate(${scrolled * 0.12}px, ${-scrolled * 0.2}px) rotate(${45 + scrolled * 0.05}deg)`;
             }
         });
     </script>
