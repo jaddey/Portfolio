@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Портфолио — Technical Designer</title>
     
-    <!-- Подключение файла с палитрой цветов -->
     <link rel="stylesheet" href="theme.css">
 
     <style>
@@ -13,6 +12,10 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -26,6 +29,59 @@
             padding: 2rem;
             position: relative;
             overflow-x: hidden;
+        }
+
+        /* Индикатор прокрутки */
+        .scroll-progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 1000;
+        }
+
+        .scroll-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--scroll-bar-color);
+            box-shadow: 0 0 8px var(--scroll-bar-color);
+            transition: width 0.1s ease-out;
+        }
+
+        /* Панель быстрой навигации */
+        .nav-bar {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 90;
+            background: var(--card-bg);
+            padding: 0.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .bg-dots {
@@ -103,6 +159,7 @@
             width: 100%;
             position: relative;
             z-index: 1;
+            margin-top: 1rem;
         }
 
         .card {
@@ -115,6 +172,7 @@
             flex-direction: column;
             justify-content: center;
             transition: transform 0.2s ease, border-color 0.2s ease;
+            scroll-margin-top: 2rem;
         }
 
         .card:hover {
@@ -209,6 +267,57 @@
             text-decoration: underline;
         }
 
+        /* Элемент строки контакта с кнопкой копирования */
+        .contact-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            color: var(--accent-hover);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .copy-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        /* Всплывающая подсказка скопировано */
+        .copy-tooltip {
+            position: absolute;
+            right: -85px;
+            background: var(--accent-primary);
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .copy-tooltip.show {
+            opacity: 1;
+        }
+
         .card-collapsible.collapsed .description {
             max-height: 0;
             opacity: 0;
@@ -261,6 +370,20 @@
             stroke-linejoin: round;
         }
 
+        @media (max-width: 1024px) {
+            .nav-bar {
+                position: static;
+                flex-direction: row;
+                justify-content: center;
+                margin-bottom: 1rem;
+                width: 100%;
+                max-width: 900px;
+            }
+            body {
+                flex-direction: column;
+            }
+        }
+
         @media (max-width: 768px) {
             .grid-container {
                 grid-template-columns: 1fr;
@@ -275,16 +398,6 @@
                 margin: 0 auto;
             }
 
-            .gamepad-1 {
-                width: 320px;
-                right: -60px;
-            }
-
-            .gamepad-2 {
-                width: 280px;
-                left: -60px;
-            }
-
             .floating-collapse-btn {
                 bottom: 1.5rem;
                 right: 1.5rem;
@@ -293,6 +406,18 @@
     </style>
 </head>
 <body>
+
+    <!-- Индикатор прокрутки -->
+    <div class="scroll-progress-container">
+        <div class="scroll-progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Быстрая навигация -->
+    <nav class="nav-bar">
+        <button class="nav-btn" onclick="scrollToCard('card-about')">О себе</button>
+        <button class="nav-btn" onclick="scrollToCard('card-experience')">Опыт</button>
+        <button class="nav-btn" onclick="scrollToCard('card-contacts')">Контакты</button>
+    </nav>
 
     <svg style="width:0; height:0; position:absolute;" aria-hidden="true">
         <defs>
@@ -376,7 +501,27 @@
                 if (data.experienceCollapsed) document.getElementById('card-experience').classList.add('collapsed');
                 
                 document.getElementById('contacts-title').textContent = data.contactsTitle;
-                document.getElementById('contacts-text').innerHTML = data.contactsText;
+                
+                // Динамическое добавление контактов с кнопками быстрого копирования
+                const contactsHTML = `
+                    Тел.: <a href="tel:+79511567563">+7 951 156 75 63</a><br>
+                    E-mail: <span class="contact-row">
+                        <a href="mailto:alexander.masyuk@gmail.com">alexander.masyuk@gmail.com</a>
+                        <button class="copy-btn" onclick="copyToClipboard('alexander.masyuk@gmail.com', this)" title="Скопировать e-mail">
+                            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
+                        <span class="copy-tooltip">Скопировано!</span>
+                    </span><br>
+                    Телеграм: <span class="contact-row">
+                        <a href="https://t.me/KlausterHargreeves" target="_blank">@KlausterHargreeves</a>
+                        <button class="copy-btn" onclick="copyToClipboard('@KlausterHargreeves', this)" title="Скопировать логин">
+                            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
+                        <span class="copy-tooltip">Скопировано!</span>
+                    </span><br>
+                    Предпочтительный способ связи: телеграм, телефон
+                `;
+                document.getElementById('contacts-text').innerHTML = contactsHTML;
                 if (data.contactsCollapsed) document.getElementById('card-contacts').classList.add('collapsed');
 
                 document.title = `${data.name} — ${data.role}`;
@@ -385,6 +530,31 @@
             .catch(error => {
                 console.error('Ошибка загрузки profile.json:', error);
             });
+
+        // Функция быстрой копировки в буфер обмена
+        function copyToClipboard(text, btnElement) {
+            navigator.clipboard.writeText(text).then(() => {
+                const tooltip = btnElement.nextElementSibling;
+                if (tooltip) {
+                    tooltip.classList.add('show');
+                    setTimeout(() => {
+                        tooltip.classList.remove('show');
+                    }, 1500);
+                }
+            });
+        }
+
+        // Прокрутка до нужного блока
+        function scrollToCard(cardId) {
+            const card = document.getElementById(cardId);
+            if (card) {
+                // Если блок свернут — автоматически разворачиваем его
+                if (card.classList.contains('collapsed')) {
+                    card.classList.remove('collapsed');
+                }
+                card.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
 
         function toggleCard(cardId) {
             const card = document.getElementById(cardId);
@@ -434,6 +604,13 @@
         window.addEventListener('scroll', () => {
             const scrolled = window.scrollY;
 
+            // Обновление полосы прогресса
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolledPercent = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolledPercent + "%";
+
+            // Эффекты параллакса
             const sq1 = document.querySelector('.square-1');
             const sq2 = document.querySelector('.square-2');
             const gp1 = document.querySelector('.gamepad-1');
