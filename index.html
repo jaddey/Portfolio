@@ -25,8 +25,8 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 2rem;
+            align-items: flex-start;
+            padding: 2rem 2rem 60vh 2rem;
             position: relative;
             overflow-x: hidden;
         }
@@ -50,20 +50,48 @@
             transition: width 0.1s ease-out;
         }
 
-        /* Панель быстрой навигации */
+        /* Панель быстрой навигации (справа, сворачивается) */
         .nav-bar {
             position: fixed;
             top: 2rem;
-            left: 2rem;
+            right: 2rem;
             display: flex;
             flex-direction: column;
+            align-items: flex-end;
             gap: 0.5rem;
             z-index: 90;
             background: var(--card-bg);
-            padding: 0.5rem;
+            padding: 0.75rem;
             border-radius: 12px;
             border: 1px solid var(--border-color);
             backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            width: 44px;
+            height: 44px;
+        }
+
+        /* Иконка гамбургера для свернутого состояния */
+        .nav-bar::before {
+            content: '';
+            display: flex;
+            width: 20px;
+            height: 2px;
+            background: var(--text-secondary);
+            box-shadow: 0 6px 0 var(--text-secondary), 0 -6px 0 var(--text-secondary);
+            margin: 11px 4px 0 0;
+            transition: opacity 0.2s ease;
+        }
+
+        /* Раскрытие при наведении */
+        .nav-bar:hover {
+            width: 160px;
+            height: auto;
+            padding: 0.75rem;
+        }
+
+        .nav-bar:hover::before {
+            display: none;
         }
 
         .nav-btn {
@@ -75,8 +103,17 @@
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;
-            text-align: left;
-            transition: all 0.2s ease;
+            text-align: right;
+            width: 100%;
+            opacity: 0;
+            white-space: nowrap;
+            transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease;
+            pointer-events: none;
+        }
+
+        .nav-bar:hover .nav-btn {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .nav-btn:hover {
@@ -370,20 +407,6 @@
             stroke-linejoin: round;
         }
 
-        @media (max-width: 1024px) {
-            .nav-bar {
-                position: static;
-                flex-direction: row;
-                justify-content: center;
-                margin-bottom: 1rem;
-                width: 100%;
-                max-width: 900px;
-            }
-            body {
-                flex-direction: column;
-            }
-        }
-
         @media (max-width: 768px) {
             .grid-container {
                 grid-template-columns: 1fr;
@@ -502,32 +525,31 @@
                 
                 document.getElementById('contacts-title').textContent = data.contactsTitle;
                 
-                // Динамическое добавление контактов с кнопками быстрого копирования
+                // Добавлены кнопки быстрого копирования для всех контактов, включая телефон
                 const contactsHTML = `
-const contactsHTML = `
-    Тел.: <span class="contact-row">
-        <a href="tel:+79511567563">+7 951 156 75 63</a>
-        <button class="copy-btn" onclick="copyToClipboard('+79511567563', this)" title="Скопировать телефон">
-            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-        </button>
-        <span class="copy-tooltip">Скопировано!</span>
-    </span><br>
-    E-mail: <span class="contact-row">
-        <a href="mailto:alexander.masyuk@gmail.com">alexander.masyuk@gmail.com</a>
-        <button class="copy-btn" onclick="copyToClipboard('alexander.masyuk@gmail.com', this)" title="Скопировать e-mail">
-            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-        </button>
-        <span class="copy-tooltip">Скопировано!</span>
-    </span><br>
-    Телеграм: <span class="contact-row">
-        <a href="https://t.me/KlausterHargreeves" target="_blank">@KlausterHargreeves</a>
-        <button class="copy-btn" onclick="copyToClipboard('@KlausterHargreeves', this)" title="Скопировать логин">
-            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-        </button>
-        <span class="copy-tooltip">Скопировано!</span>
-    </span><br>
-    Предпочтительный способ связи: телеграм, телефон
-`;
+                    Тел.: <span class="contact-row">
+                        <a href="tel:+79511567563">+7 951 156 75 63</a>
+                        <button class="copy-btn" onclick="copyToClipboard('+79511567563', this)" title="Скопировать телефон">
+                            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
+                        <span class="copy-tooltip">Скопировано!</span>
+                    </span><br>
+                    E-mail: <span class="contact-row">
+                        <a href="mailto:alexander.masyuk@gmail.com">alexander.masyuk@gmail.com</a>
+                        <button class="copy-btn" onclick="copyToClipboard('alexander.masyuk@gmail.com', this)" title="Скопировать e-mail">
+                            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
+                        <span class="copy-tooltip">Скопировано!</span>
+                    </span><br>
+                    Телеграм: <span class="contact-row">
+                        <a href="https://t.me/KlausterHargreeves" target="_blank">@KlausterHargreeves</a>
+                        <button class="copy-btn" onclick="copyToClipboard('@KlausterHargreeves', this)" title="Скопировать логин">
+                            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
+                        <span class="copy-tooltip">Скопировано!</span>
+                    </span><br>
+                    Предпочтительный способ связи: телеграм, телефон
+                `;
                 document.getElementById('contacts-text').innerHTML = contactsHTML;
                 if (data.contactsCollapsed) document.getElementById('card-contacts').classList.add('collapsed');
 
@@ -555,7 +577,6 @@ const contactsHTML = `
         function scrollToCard(cardId) {
             const card = document.getElementById(cardId);
             if (card) {
-                // Если блок свернут — автоматически разворачиваем его
                 if (card.classList.contains('collapsed')) {
                     card.classList.remove('collapsed');
                 }
