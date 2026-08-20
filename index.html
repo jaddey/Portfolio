@@ -206,7 +206,7 @@
             fill: url(#gamepad-grad-2);
         }
 
-        /* Сетка профиля */
+        /* Сетка карточек */
         .grid-container {
             display: grid;
             grid-template-columns: 220px 1fr;
@@ -288,6 +288,7 @@
             margin: 0;
         }
 
+        /* Иконка переключателя */
         .toggle-icon {
             width: 20px;
             height: 20px;
@@ -299,6 +300,11 @@
             transition: transform 0.3s ease;
         }
 
+        /* Если блок свернут - поворачиваем стрелку вниз */
+        .card-collapsible.collapsed .toggle-icon {
+            transform: rotate(180deg);
+        }
+
         .description {
             font-size: 1.05rem;
             color: var(--text-secondary);
@@ -307,10 +313,10 @@
             opacity: 1;
             overflow: hidden;
             margin-top: 0.75rem;
+            white-space: pre-line;
             transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
         }
 
-        /* Подмодули (Карьера и Портфолио) */
         .submodules-list {
             display: flex;
             flex-direction: column;
@@ -361,7 +367,6 @@
             font-size: 0.95rem;
         }
 
-        /* Теги технологий/инструментов */
         .tags-container {
             display: flex;
             flex-wrap: wrap;
@@ -378,31 +383,6 @@
             border: 1px solid var(--border-color);
         }
 
-        /* Медиа контейнеры */
-        .media-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 0.75rem;
-            margin-top: 0.75rem;
-        }
-
-        .media-item {
-            width: 100%;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            background: #000;
-            aspect-ratio: 16 / 9;
-        }
-
-        .media-item img, .media-item video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* Контакты & Ссылки (Явно переопределяем цвета ссылок) */
         .contact-row {
             display: inline-flex;
             align-items: center;
@@ -467,10 +447,6 @@
             max-height: 0;
             opacity: 0;
             margin-top: 0;
-        }
-
-        .card-collapsible.collapsed .toggle-icon {
-            transform: rotate(180deg);
         }
 
         .floating-collapse-btn {
@@ -556,8 +532,7 @@
         </div>
         <div class="nav-links">
             <button class="nav-btn" onclick="scrollToCard('card-about')">О себе</button>
-            <button class="nav-btn" onclick="scrollToCard('card-career')">Карьера</button>
-            <button class="nav-btn" onclick="scrollToCard('card-portfolio')">Портфолио</button>
+            <button class="nav-btn" onclick="scrollToCard('card-career')">Опыт работы</button>
             <button class="nav-btn" onclick="scrollToCard('card-contacts')">Контакты</button>
         </div>
     </nav>
@@ -602,30 +577,19 @@
         <div class="card card-full-width card-collapsible" id="card-about">
             <div class="card-title-row" onclick="toggleCard('card-about')">
                 <h2 id="about-title">О себе</h2>
-                <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"></polyline></svg>
             </div>
             <div class="description" id="about-text"></div>
         </div>
 
-        <!-- Карьера -->
+        <!-- Опыт работы -->
         <div class="card card-full-width card-collapsible" id="card-career">
             <div class="card-title-row" onclick="toggleCard('card-career')">
-                <h2 id="career-title">Карьера</h2>
-                <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <h2 id="career-title">Опыт работы</h2>
+                <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"></polyline></svg>
             </div>
             <div class="description">
                 <div class="submodules-list" id="career-list"></div>
-            </div>
-        </div>
-
-        <!-- Портфолио -->
-        <div class="card card-full-width card-collapsible" id="card-portfolio">
-            <div class="card-title-row" onclick="toggleCard('card-portfolio')">
-                <h2 id="portfolio-title">Портфолио</h2>
-                <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </div>
-            <div class="description">
-                <div class="submodules-list" id="portfolio-list"></div>
             </div>
         </div>
 
@@ -633,7 +597,7 @@
         <div class="card card-full-width card-collapsible" id="card-contacts">
             <div class="card-title-row" onclick="toggleCard('card-contacts')">
                 <h2 id="contacts-title">Контакты</h2>
-                <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"></polyline></svg>
             </div>
             <div class="description" id="contacts-text"></div>
         </div>
@@ -656,21 +620,16 @@
                 document.getElementById('about-text').innerText = data.aboutText;
                 if (data.aboutCollapsed) document.getElementById('card-about').classList.add('collapsed');
                 
-                // Карьера
-                document.getElementById('career-title').textContent = data.careerTitle || "Карьера";
+                // Опыт работы
+                document.getElementById('career-title').textContent = data.careerTitle || "Опыт работы";
                 renderSubmodules('career-list', data.careerItems);
                 if (data.careerCollapsed) document.getElementById('card-career').classList.add('collapsed');
-
-                // Портфолио
-                document.getElementById('portfolio-title').textContent = data.portfolioTitle || "Портфолио";
-                renderSubmodules('portfolio-list', data.portfolioItems);
-                if (data.portfolioCollapsed) document.getElementById('card-portfolio').classList.add('collapsed');
 
                 // Контакты
                 document.getElementById('contacts-title').textContent = data.contactsTitle || "Контакты";
                 const contactsHTML = `
                     Тел.: <span class="contact-row">
-                        <a href="tel:+79511567563">+7 9511567563</a>
+                        <a href="tel:+79511567563">+7 951 156 75 63</a>
                         <button class="copy-btn" onclick="copyToClipboard('+79511567563', this)" title="Скопировать">
                             <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         </button>
@@ -708,16 +667,6 @@
 
             container.innerHTML = items.map(item => {
                 const tagsHTML = item.tags ? `<div class="tags-container">${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : '';
-                
-                let mediaHTML = '';
-                if (item.media && item.media.length > 0) {
-                    mediaHTML = `<div class="media-grid">` + item.media.map(m => {
-                        if (m.type === 'video') {
-                            return `<div class="media-item"><video src="${m.url}" controls poster="${m.poster || ''}"></video></div>`;
-                        }
-                        return `<div class="media-item"><img src="${m.url}" alt="${m.alt || ''}"></div>`;
-                    }).join('') + `</div>`;
-                }
 
                 return `
                     <div class="submodule-item">
@@ -730,7 +679,6 @@
                         </div>
                         <div class="submodule-body">${item.description}</div>
                         ${tagsHTML}
-                        ${mediaHTML}
                     </div>
                 `;
             }).join('');
