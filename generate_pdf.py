@@ -6,7 +6,7 @@ from weasyprint import HTML
 with open('profile.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
-# Читаем фото photo.jpg, если есть, переводим в base64
+# Читаем photo.jpg если есть
 photo_b64 = ""
 if os.path.exists("photo.jpg"):
     with open("photo.jpg", "rb") as img_file:
