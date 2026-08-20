@@ -50,7 +50,7 @@
             transition: width 0.1s ease-out;
         }
 
-        /* Обновленная панель быстрой навигации */
+        /* Панель быстрой навигации */
         .nav-bar {
             position: fixed;
             top: 2rem;
@@ -96,7 +96,6 @@
             color: var(--accent-primary);
         }
 
-        /* Раскрытие при наведении */
         .nav-bar:hover {
             width: 160px;
             height: auto;
@@ -139,6 +138,7 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
+        /* Фоновые фигуры */
         .bg-dots {
             position: fixed;
             top: 0;
@@ -206,6 +206,7 @@
             fill: url(#gamepad-grad-2);
         }
 
+        /* Сетка профиля */
         .grid-container {
             display: grid;
             grid-template-columns: 220px 1fr;
@@ -302,27 +303,106 @@
             font-size: 1.05rem;
             color: var(--text-secondary);
             line-height: 1.6;
-            white-space: pre-line;
-            max-height: 2000px;
+            max-height: 5000px;
             opacity: 1;
             overflow: hidden;
             margin-top: 0.75rem;
             transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
         }
 
-        .description a {
+        /* Подмодули (Карьера и Портфолио) */
+        .submodules-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .submodule-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .submodule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .submodule-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .submodule-subtitle {
+            font-size: 0.95rem;
             color: var(--accent-primary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
         }
 
-        .description a:hover {
-            color: var(--accent-hover);
-            text-decoration: underline;
+        .submodule-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
         }
 
-        /* Элемент строки контакта с кнопкой копирования */
+        .submodule-body {
+            white-space: pre-line;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Теги технологий/инструментов */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.25rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Медиа контейнеры (Картинки / Видео) */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .media-item {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: #000;
+            aspect-ratio: 16 / 9;
+        }
+
+        .media-item img, .media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Контакты */
         .contact-row {
             display: inline-flex;
             align-items: center;
@@ -355,7 +435,6 @@
             stroke-width: 2;
         }
 
-        /* Всплывающая подсказка скопировано */
         .copy-tooltip {
             position: absolute;
             right: -85px;
@@ -448,12 +527,10 @@
 </head>
 <body>
 
-    <!-- Индикатор прокрутки -->
     <div class="scroll-progress-container">
         <div class="scroll-progress-bar" id="progressBar"></div>
     </div>
 
-    <!-- Быстрая навигация с понятным заголовком и иконкой -->
     <nav class="nav-bar">
         <div class="nav-header">
             <svg class="nav-icon" viewBox="0 0 24 24">
@@ -468,7 +545,8 @@
         </div>
         <div class="nav-links">
             <button class="nav-btn" onclick="scrollToCard('card-about')">О себе</button>
-            <button class="nav-btn" onclick="scrollToCard('card-experience')">Опыт</button>
+            <button class="nav-btn" onclick="scrollToCard('card-career')">Карьера</button>
+            <button class="nav-btn" onclick="scrollToCard('card-portfolio')">Портфолио</button>
             <button class="nav-btn" onclick="scrollToCard('card-contacts')">Контакты</button>
         </div>
     </nav>
@@ -509,25 +587,41 @@
             <div class="subtitle" id="user-role">...</div>
         </div>
 
+        <!-- О себе -->
         <div class="card card-full-width card-collapsible" id="card-about">
             <div class="card-title-row" onclick="toggleCard('card-about')">
-                <h2 id="about-title">...</h2>
+                <h2 id="about-title">О себе</h2>
                 <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
             <div class="description" id="about-text"></div>
         </div>
 
-        <div class="card card-full-width card-collapsible" id="card-experience">
-            <div class="card-title-row" onclick="toggleCard('card-experience')">
-                <h2 id="experience-title">...</h2>
+        <!-- Карьера -->
+        <div class="card card-full-width card-collapsible" id="card-career">
+            <div class="card-title-row" onclick="toggleCard('card-career')">
+                <h2 id="career-title">Карьера</h2>
                 <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
-            <div class="description" id="experience-text"></div>
+            <div class="description">
+                <div class="submodules-list" id="career-list"></div>
+            </div>
         </div>
 
+        <!-- Портфолио -->
+        <div class="card card-full-width card-collapsible" id="card-portfolio">
+            <div class="card-title-row" onclick="toggleCard('card-portfolio')">
+                <h2 id="portfolio-title">Портфолио</h2>
+                <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div class="description">
+                <div class="submodules-list" id="portfolio-list"></div>
+            </div>
+        </div>
+
+        <!-- Контакты -->
         <div class="card card-full-width card-collapsible" id="card-contacts">
             <div class="card-title-row" onclick="toggleCard('card-contacts')">
-                <h2 id="contacts-title">...</h2>
+                <h2 id="contacts-title">Контакты</h2>
                 <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
             <div class="description" id="contacts-text"></div>
@@ -546,35 +640,41 @@
                 document.getElementById('user-name').textContent = data.name;
                 document.getElementById('user-role').textContent = data.role;
                 
-                document.getElementById('about-title').textContent = data.aboutTitle;
+                // О себе
+                document.getElementById('about-title').textContent = data.aboutTitle || "О себе";
                 document.getElementById('about-text').innerText = data.aboutText;
                 if (data.aboutCollapsed) document.getElementById('card-about').classList.add('collapsed');
                 
-                document.getElementById('experience-title').textContent = data.experienceTitle;
-                document.getElementById('experience-text').innerText = data.experienceText;
-                if (data.experienceCollapsed) document.getElementById('card-experience').classList.add('collapsed');
-                
-                document.getElementById('contacts-title').textContent = data.contactsTitle;
-                
-                // Добавлены кнопки быстрого копирования для всех контактов, включая телефон
+                // Карьера
+                document.getElementById('career-title').textContent = data.careerTitle || "Карьера";
+                renderSubmodules('career-list', data.careerItems);
+                if (data.careerCollapsed) document.getElementById('card-career').classList.add('collapsed');
+
+                // Портфолио
+                document.getElementById('portfolio-title').textContent = data.portfolioTitle || "Портфолио";
+                renderSubmodules('portfolio-list', data.portfolioItems);
+                if (data.portfolioCollapsed) document.getElementById('card-portfolio').classList.add('collapsed');
+
+                // Контакты
+                document.getElementById('contacts-title').textContent = data.contactsTitle || "Контакты";
                 const contactsHTML = `
                     Тел.: <span class="contact-row">
                         <a href="tel:+79511567563">+7 951 156 75 63</a>
-                        <button class="copy-btn" onclick="copyToClipboard('+79511567563', this)" title="Скопировать телефон">
+                        <button class="copy-btn" onclick="copyToClipboard('+79511567563', this)" title="Скопировать">
                             <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         </button>
                         <span class="copy-tooltip">Скопировано!</span>
                     </span><br>
                     E-mail: <span class="contact-row">
                         <a href="mailto:alexander.masyuk@gmail.com">alexander.masyuk@gmail.com</a>
-                        <button class="copy-btn" onclick="copyToClipboard('alexander.masyuk@gmail.com', this)" title="Скопировать e-mail">
+                        <button class="copy-btn" onclick="copyToClipboard('alexander.masyuk@gmail.com', this)" title="Скопировать">
                             <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         </button>
                         <span class="copy-tooltip">Скопировано!</span>
                     </span><br>
                     Телеграм: <span class="contact-row">
                         <a href="https://t.me/KlausterHargreeves" target="_blank">@KlausterHargreeves</a>
-                        <button class="copy-btn" onclick="copyToClipboard('@KlausterHargreeves', this)" title="Скопировать логин">
+                        <button class="copy-btn" onclick="copyToClipboard('@KlausterHargreeves', this)" title="Скопировать">
                             <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         </button>
                         <span class="copy-tooltip">Скопировано!</span>
@@ -591,26 +691,55 @@
                 console.error('Ошибка загрузки profile.json:', error);
             });
 
-        // Функция быстрой копировки в буфер обмена
+        // Функция рендеринга подмодулей (карьеры / проектов)
+        function renderSubmodules(containerId, items) {
+            const container = document.getElementById(containerId);
+            if (!items || items.length === 0) return;
+
+            container.innerHTML = items.map(item => {
+                const tagsHTML = item.tags ? `<div class="tags-container">${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : '';
+                
+                let mediaHTML = '';
+                if (item.media && item.media.length > 0) {
+                    mediaHTML = `<div class="media-grid">` + item.media.map(m => {
+                        if (m.type === 'video') {
+                            return `<div class="media-item"><video src="${m.url}" controls poster="${m.poster || ''}"></video></div>`;
+                        }
+                        return `<div class="media-item"><img src="${m.url}" alt="${m.alt || ''}"></div>`;
+                    }).join('') + `</div>`;
+                }
+
+                return `
+                    <div class="submodule-item">
+                        <div class="submodule-header">
+                            <div>
+                                <div class="submodule-title">${item.title}</div>
+                                ${item.subtitle ? `<div class="submodule-subtitle">${item.subtitle}</div>` : ''}
+                            </div>
+                            ${item.date ? `<div class="submodule-date">${item.date}</div>` : ''}
+                        </div>
+                        <div class="submodule-body">${item.description}</div>
+                        ${tagsHTML}
+                        ${mediaHTML}
+                    </div>
+                `;
+            }).join('');
+        }
+
         function copyToClipboard(text, btnElement) {
             navigator.clipboard.writeText(text).then(() => {
                 const tooltip = btnElement.nextElementSibling;
                 if (tooltip) {
                     tooltip.classList.add('show');
-                    setTimeout(() => {
-                        tooltip.classList.remove('show');
-                    }, 1500);
+                    setTimeout(() => tooltip.classList.remove('show'), 1500);
                 }
             });
         }
 
-        // Прокрутка до нужного блока
         function scrollToCard(cardId) {
             const card = document.getElementById(cardId);
             if (card) {
-                if (card.classList.contains('collapsed')) {
-                    card.classList.remove('collapsed');
-                }
+                if (card.classList.contains('collapsed')) card.classList.remove('collapsed');
                 card.scrollIntoView({ behavior: 'smooth' });
             }
         }
@@ -662,14 +791,10 @@
 
         window.addEventListener('scroll', () => {
             const scrolled = window.scrollY;
-
-            // Обновление полосы прогресса
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolledPercent = (winScroll / height) * 100;
-            document.getElementById("progressBar").style.width = scrolledPercent + "%";
+            document.getElementById("progressBar").style.width = ((winScroll / height) * 100) + "%";
 
-            // Эффекты параллакса
             const sq1 = document.querySelector('.square-1');
             const sq2 = document.querySelector('.square-2');
             const gp1 = document.querySelector('.gamepad-1');
@@ -683,6 +808,5 @@
             updateFloatingButton();
         });
     </script>
-
 </body>
 </html>
