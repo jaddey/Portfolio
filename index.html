@@ -315,11 +315,11 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
         }
 
         .submodule-item {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 1.25rem;
@@ -371,14 +371,14 @@
 
         .tag {
             font-size: 0.75rem;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
             color: var(--text-primary);
             padding: 0.2rem 0.5rem;
             border-radius: 4px;
             border: 1px solid var(--border-color);
         }
 
-        /* Медиа контейнеры (Картинки / Видео) */
+        /* Медиа контейнеры */
         .media-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -402,12 +402,23 @@
             display: block;
         }
 
-        /* Контакты */
+        /* Контакты & Ссылки (Явно переопределяем цвета ссылок) */
         .contact-row {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             position: relative;
+        }
+
+        .contact-row a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.2s ease, text-decoration 0.2s ease;
+        }
+
+        .contact-row a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
         }
 
         .copy-btn {
@@ -691,7 +702,6 @@
                 console.error('Ошибка загрузки profile.json:', error);
             });
 
-        // Функция рендеринга подмодулей (карьеры / проектов)
         function renderSubmodules(containerId, items) {
             const container = document.getElementById(containerId);
             if (!items || items.length === 0) return;
