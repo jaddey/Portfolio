@@ -504,23 +504,30 @@
                 
                 // Динамическое добавление контактов с кнопками быстрого копирования
                 const contactsHTML = `
-                    Тел.: <a href="tel:+79511567563">+7 951 156 75 63</a><br>
-                    E-mail: <span class="contact-row">
-                        <a href="mailto:alexander.masyuk@gmail.com">alexander.masyuk@gmail.com</a>
-                        <button class="copy-btn" onclick="copyToClipboard('alexander.masyuk@gmail.com', this)" title="Скопировать e-mail">
-                            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        </button>
-                        <span class="copy-tooltip">Скопировано!</span>
-                    </span><br>
-                    Телеграм: <span class="contact-row">
-                        <a href="https://t.me/KlausterHargreeves" target="_blank">@KlausterHargreeves</a>
-                        <button class="copy-btn" onclick="copyToClipboard('@KlausterHargreeves', this)" title="Скопировать логин">
-                            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        </button>
-                        <span class="copy-tooltip">Скопировано!</span>
-                    </span><br>
-                    Предпочтительный способ связи: телеграм, телефон
-                `;
+const contactsHTML = `
+    Тел.: <span class="contact-row">
+        <a href="tel:+79511567563">+7 951 156 75 63</a>
+        <button class="copy-btn" onclick="copyToClipboard('+79511567563', this)" title="Скопировать телефон">
+            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
+        <span class="copy-tooltip">Скопировано!</span>
+    </span><br>
+    E-mail: <span class="contact-row">
+        <a href="mailto:alexander.masyuk@gmail.com">alexander.masyuk@gmail.com</a>
+        <button class="copy-btn" onclick="copyToClipboard('alexander.masyuk@gmail.com', this)" title="Скопировать e-mail">
+            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
+        <span class="copy-tooltip">Скопировано!</span>
+    </span><br>
+    Телеграм: <span class="contact-row">
+        <a href="https://t.me/KlausterHargreeves" target="_blank">@KlausterHargreeves</a>
+        <button class="copy-btn" onclick="copyToClipboard('@KlausterHargreeves', this)" title="Скопировать логин">
+            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
+        <span class="copy-tooltip">Скопировано!</span>
+    </span><br>
+    Предпочтительный способ связи: телеграм, телефон
+`;
                 document.getElementById('contacts-text').innerHTML = contactsHTML;
                 if (data.contactsCollapsed) document.getElementById('card-contacts').classList.add('collapsed');
 
