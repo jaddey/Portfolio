@@ -383,6 +383,11 @@
             border: 1px solid var(--border-color);
         }
 
+        .contacts-wrapper {
+            font-style: normal;
+            line-height: 1.8;
+        }
+
         .contact-row {
             display: inline-flex;
             align-items: center;
@@ -532,7 +537,7 @@
         </div>
         <div class="nav-links">
             <button class="nav-btn" onclick="scrollToCard('card-about')">О себе</button>
-            <button class="nav-btn" onclick="scrollToCard('card-career')">Опыт работы</button>
+            <button class="nav-btn" onclick="scrollToCard('card-career')">Карьера</button>
             <button class="nav-btn" onclick="scrollToCard('card-contacts')">Контакты</button>
         </div>
     </nav>
@@ -573,7 +578,6 @@
             <div class="subtitle" id="user-role">...</div>
         </div>
 
-        <!-- О себе -->
         <div class="card card-full-width card-collapsible" id="card-about">
             <div class="card-title-row" onclick="toggleCard('card-about')">
                 <h2 id="about-title">О себе</h2>
@@ -582,10 +586,9 @@
             <div class="description" id="about-text"></div>
         </div>
 
-        <!-- Опыт работы -->
         <div class="card card-full-width card-collapsible" id="card-career">
             <div class="card-title-row" onclick="toggleCard('card-career')">
-                <h2 id="career-title">Опыт работы</h2>
+                <h2 id="career-title">Карьера</h2>
                 <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"></polyline></svg>
             </div>
             <div class="description">
@@ -593,7 +596,6 @@
             </div>
         </div>
 
-        <!-- Контакты -->
         <div class="card card-full-width card-collapsible" id="card-contacts">
             <div class="card-title-row" onclick="toggleCard('card-contacts')">
                 <h2 id="contacts-title">Контакты</h2>
@@ -604,7 +606,7 @@
 
     </div>
 
-    <button class="floating-collapse-btn" id="floatingBtn" onclick="collapseMostVisibleCard()" title="Свернуть активный блок">
+    <button class="floating-collapse-btn" id="floatingBtn" onclick="collapseMostVisibleCard()" title="Свернуть активный блок" aria-label="Свернуть активный блок">
         <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </button>
 
@@ -620,36 +622,38 @@
                 document.getElementById('about-text').innerText = data.aboutText;
                 if (data.aboutCollapsed) document.getElementById('card-about').classList.add('collapsed');
                 
-                // Опыт работы
-                document.getElementById('career-title').textContent = data.careerTitle || "Опыт работы";
+                // Карьера
+                document.getElementById('career-title').textContent = data.careerTitle || "Карьера";
                 renderSubmodules('career-list', data.careerItems);
                 if (data.careerCollapsed) document.getElementById('card-career').classList.add('collapsed');
 
                 // Контакты
                 document.getElementById('contacts-title').textContent = data.contactsTitle || "Контакты";
                 const contactsHTML = `
-                    Тел.: <span class="contact-row">
-                        <a href="tel:+79511567563">+7 951 156 75 63</a>
-                        <button class="copy-btn" onclick="copyToClipboard('+79511567563', this)" title="Скопировать">
-                            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        </button>
-                        <span class="copy-tooltip">Скопировано!</span>
-                    </span><br>
-                    E-mail: <span class="contact-row">
-                        <a href="mailto:alexander.masyuk@gmail.com">alexander.masyuk@gmail.com</a>
-                        <button class="copy-btn" onclick="copyToClipboard('alexander.masyuk@gmail.com', this)" title="Скопировать">
-                            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        </button>
-                        <span class="copy-tooltip">Скопировано!</span>
-                    </span><br>
-                    Телеграм: <span class="contact-row">
-                        <a href="https://t.me/KlausterHargreeves" target="_blank">@KlausterHargreeves</a>
-                        <button class="copy-btn" onclick="copyToClipboard('@KlausterHargreeves', this)" title="Скопировать">
-                            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        </button>
-                        <span class="copy-tooltip">Скопировано!</span>
-                    </span><br>
-                    Предпочтительный способ связи: телеграм, телефон
+                    <address class="contacts-wrapper">
+                        Тел.: <span class="contact-row">
+                            <a href="tel:+79511567563">+7 951 156 75 63</a>
+                            <button class="copy-btn" onclick="copyToClipboard('+79511567563', this)" title="Скопировать" aria-label="Скопировать номер телефона">
+                                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                            <span class="copy-tooltip">Скопировано!</span>
+                        </span><br>
+                        E-mail: <span class="contact-row">
+                            <a href="mailto:alexander.masyuk@gmail.com">alexander.masyuk@gmail.com</a>
+                            <button class="copy-btn" onclick="copyToClipboard('alexander.masyuk@gmail.com', this)" title="Скопировать" aria-label="Скопировать адрес электронной почты">
+                                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                            <span class="copy-tooltip">Скопировано!</span>
+                        </span><br>
+                        Телеграм: <span class="contact-row">
+                            <a href="https://t.me/KlausterHargreeves" target="_blank">@KlausterHargreeves</a>
+                            <button class="copy-btn" onclick="copyToClipboard('@KlausterHargreeves', this)" title="Скопировать" aria-label="Скопировать логин Telegram">
+                                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                            <span class="copy-tooltip">Скопировано!</span>
+                        </span><br>
+                        Предпочтительный способ связи: телеграм, телефон
+                    </address>
                 `;
                 document.getElementById('contacts-text').innerHTML = contactsHTML;
                 if (data.contactsCollapsed) document.getElementById('card-contacts').classList.add('collapsed');
@@ -747,10 +751,24 @@
             }
         }
 
+        // Оптимизированная обработка прокрутки через requestAnimationFrame
+        let ticking = false;
+
         window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    onScrollUpdate();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        function onScrollUpdate() {
             const scrolled = window.scrollY;
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            
             document.getElementById("progressBar").style.width = ((winScroll / height) * 100) + "%";
 
             const sq1 = document.querySelector('.square-1');
@@ -758,13 +776,13 @@
             const gp1 = document.querySelector('.gamepad-1');
             const gp2 = document.querySelector('.gamepad-2');
 
-            if (sq1) sq1.style.transform = `translateY(${scrolled * 0.22}px) rotate(${20 + scrolled * 0.03}deg)`;
-            if (sq2) sq2.style.transform = `translateY(${-scrolled * 0.18}px) rotate(${-15 - scrolled * 0.02}deg)`;
-            if (gp1) gp1.style.transform = `translateY(${-scrolled * 0.15}px) rotate(${-12 + scrolled * 0.04}deg)`;
-            if (gp2) gp2.style.transform = `translateY(${scrolled * 0.2}px) rotate(${25 - scrolled * 0.03}deg)`;
+            if (sq1) sq1.style.transform = `translate3d(0, ${scrolled * 0.22}px, 0) rotate(${20 + scrolled * 0.03}deg)`;
+            if (sq2) sq2.style.transform = `translate3d(0, ${-scrolled * 0.18}px, 0) rotate(${-15 - scrolled * 0.02}deg)`;
+            if (gp1) gp1.style.transform = `translate3d(0, ${-scrolled * 0.15}px, 0) rotate(${-12 + scrolled * 0.04}deg)`;
+            if (gp2) gp2.style.transform = `translate3d(0, ${scrolled * 0.2}px, 0) rotate(${25 - scrolled * 0.03}deg)`;
 
             updateFloatingButton();
-        });
+        }
     </script>
 </body>
 </html>
