@@ -97,7 +97,7 @@
         }
 
         .nav-bar:hover {
-            width: 160px;
+            width: 170px;
             height: auto;
             padding: 0.75rem;
             border-color: var(--border-hover);
@@ -131,11 +131,25 @@
             width: 100%;
             white-space: nowrap;
             transition: color 0.2s ease, background 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.4rem;
         }
 
         .nav-btn:hover {
             color: var(--text-primary);
             background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-btn-highlight {
+            color: var(--accent-primary);
+            font-weight: 700;
+        }
+
+        .nav-btn-highlight:hover {
+            color: var(--accent-hover);
         }
 
         /* Фоновые фигуры */
@@ -288,7 +302,6 @@
             margin: 0;
         }
 
-        /* Иконка переключателя */
         .toggle-icon {
             width: 20px;
             height: 20px;
@@ -300,7 +313,6 @@
             transition: transform 0.3s ease;
         }
 
-        /* Если блок свернут - поворачиваем стрелку вниз */
         .card-collapsible.collapsed .toggle-icon {
             transform: rotate(180deg);
         }
@@ -448,6 +460,42 @@
             opacity: 1;
         }
 
+        /* Кнопка скачивания PDF в контактах */
+        .pdf-download-block {
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .pdf-download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--accent-primary);
+            color: #ffffff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .pdf-download-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .pdf-download-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
         .card-collapsible.collapsed .description {
             max-height: 0;
             opacity: 0;
@@ -539,6 +587,10 @@
             <button class="nav-btn" onclick="scrollToCard('card-about')">О себе</button>
             <button class="nav-btn" onclick="scrollToCard('card-career')">Карьера</button>
             <button class="nav-btn" onclick="scrollToCard('card-contacts')">Контакты</button>
+            <a href="Resume_Alexander_Masyuk.pdf" download class="nav-btn nav-btn-highlight">
+                <span>PDF резюме</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </a>
         </div>
     </nav>
 
@@ -601,7 +653,15 @@
                 <h2 id="contacts-title">Контакты</h2>
                 <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"></polyline></svg>
             </div>
-            <div class="description" id="contacts-text"></div>
+            <div class="description">
+                <div id="contacts-text"></div>
+                <div class="pdf-download-block">
+                    <a href="Resume_Alexander_Masyuk.pdf" download class="pdf-download-btn">
+                        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <span>Скачать PDF резюме</span>
+                    </a>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -751,7 +811,6 @@
             }
         }
 
-        // Оптимизированная обработка прокрутки через requestAnimationFrame
         let ticking = false;
 
         window.addEventListener('scroll', () => {
