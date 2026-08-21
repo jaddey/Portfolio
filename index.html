@@ -952,30 +952,32 @@
             container.innerHTML = items.map(item => {
                 const tagsHTML = item.tags ? `<div class="tags-container">${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : '';
 
-                if (item.comment) {
-                    return `
-                        <div class="submodule-item">
-                            <div class="submodule-grid">
-                                <div class="submodule-main">
-                                    <div class="submodule-header">
-                                        <div>
-                                            <div class="submodule-title">${item.title}</div>
-                                            ${item.subtitle ? `<div class="submodule-subtitle">${item.subtitle}</div>` : ''}
-                                        </div>
-                                    </div>
-                                    <div class="submodule-body">${item.description}</div>
-                                    ${tagsHTML}
-                                </div>
-                                <div class="submodule-comment-side">
-                                    <div style="display: flex; justify-content: flex-end; margin-bottom: 0.75rem;">
-                                        ${item.date ? `<div class="submodule-date">${item.date}</div>` : ''}
-                                    </div>
-                                    <div>${item.comment}</div>
-                                </div>
-                            </div>
+if (item.comment) {
+    return `
+        <div class="submodule-item">
+            <div class="submodule-grid">
+                <div class="submodule-main">
+                    <div class="submodule-header">
+                        <div>
+                            <div class="submodule-title">${item.title}</div>
+                            ${item.subtitle ? `<div class="submodule-subtitle">${item.subtitle}</div>` : ''}
                         </div>
-                    `;
-                }
+                    </div>
+                    <div class="submodule-body">${item.description}</div>
+                    ${tagsHTML}
+                </div>
+                
+                <!-- Правая колонка с вынесенной датой -->
+                <div class="submodule-side-wrapper">
+                    ${item.date ? `<div class="submodule-date-container"><div class="submodule-date">${item.date}</div></div>` : ''}
+                    <div class="submodule-comment-side">
+                        ${item.comment}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
 
                 return `
                     <div class="submodule-item">
