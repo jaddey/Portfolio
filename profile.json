@@ -38,6 +38,22 @@
       "tags": ["Helpdesk", "Sysadmin", "Hardware", "Servers", "Diagnostics"]
     }
   ],
+  "projectItems": [
+  {
+    "title": "Название проекта",
+    "subtitle": "Категория / Роль",
+    "date": "2024",
+    "previewImg": "path/to/preview.jpg",
+    "description": "Краткое описание для карточки в списке.",
+    "fullDescription": "Подробное описание проекта для модального окна. Можно использовать переводы строк.\n\nВторой абзац с деталями.",
+    "modalImages": [
+      "path/to/screen1.jpg",
+      "path/to/screen2.jpg"
+    ],
+    "link": "https://example.com",
+    "tags": ["Figma", "UI/UX"]
+  }
+],
   "contactsTitle": "Контакты",
   "contactsCollapsed": false
 }
