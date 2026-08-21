@@ -587,6 +587,7 @@
         <div class="nav-links">
             <button class="nav-btn" onclick="scrollToCard('card-about')">О себе</button>
             <button class="nav-btn" onclick="scrollToCard('card-career')">Карьера</button>
+            <button class="nav-btn" onclick="scrollToCard('card-projects')">Мои работы</button>
             <button class="nav-btn" onclick="scrollToCard('card-contacts')">Контакты</button>
             <a href="Resume_Alexander_Masyuk.pdf" download class="nav-btn nav-btn-highlight">
                 <span>PDF резюме</span>
@@ -649,6 +650,17 @@
             </div>
         </div>
 
+        <!-- Добавленный блок: Мои работы -->
+        <div class="card card-full-width card-collapsible" id="card-projects">
+            <div class="card-title-row" onclick="toggleCard('card-projects')">
+                <h2 id="projects-title">Мои работы</h2>
+                <svg class="toggle-icon" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"></polyline></svg>
+            </div>
+            <div class="description">
+                <div class="submodules-list" id="projects-list"></div>
+            </div>
+        </div>
+
         <div class="card card-full-width card-collapsible" id="card-contacts">
             <div class="card-title-row" onclick="toggleCard('card-contacts')">
                 <h2 id="contacts-title">Контакты</h2>
@@ -687,6 +699,13 @@
                 document.getElementById('career-title').textContent = data.careerTitle || "Карьера";
                 renderSubmodules('career-list', data.careerItems);
                 if (data.careerCollapsed) document.getElementById('card-career').classList.add('collapsed');
+
+                // Мои работы
+                document.getElementById('projects-title').textContent = data.projectsTitle || "Мои работы";
+                if (data.projectItems) {
+                    renderSubmodules('projects-list', data.projectItems);
+                }
+                if (data.projectsCollapsed) document.getElementById('card-projects').classList.add('collapsed');
 
                 // Контакты
                 document.getElementById('contacts-title').textContent = data.contactsTitle || "Контакты";
