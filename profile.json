@@ -48,10 +48,8 @@
     "fullDescription": "Подробное описание проекта для модального окна. Можно использовать переводы строк.\n\nВторой абзац с деталями.",
     "modalImages": [
       "projects/Media/Pickle_Peter.gif",
-      "path/to/screen2.jpg"
     ],
-    "link": "https://example.com",
-    "tags": ["Figma", "UI/UX"]
+    "tags": ["Unity", "C#"],
   }
 ],
   "contactsTitle": "Контакты",
