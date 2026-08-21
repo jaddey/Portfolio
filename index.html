@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Портфолио — Technical Designer</title>
-    
+
     <link rel="stylesheet" href="theme.css">
 
     <style>
@@ -599,7 +599,7 @@
             text-decoration: underline;
         }
 
-        .copy-btn {
+                .copy-btn {
             background: transparent;
             border: none;
             cursor: pointer;
@@ -806,7 +806,7 @@
     </svg>
 
     <div class="grid-container">
-        
+
         <div class="card card-photo">
             <img src="photo.jpg" alt="Александер Масюк" class="profile-img">
         </div>
@@ -880,269 +880,6 @@
         <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </button>
 
-    <script>
-        let projectsData = [];
-
-        fetch('profile.json')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('user-name').textContent = data.name;
-                document.getElementById('user-role').textContent = data.role;
-                
-                // О себе
-                document.getElementById('about-title').textContent = data.aboutTitle || "О себе";
-                document.getElementById('about-text').innerText = data.aboutText;
-                if (data.aboutCollapsed) document.getElementById('card-about').classList.add('collapsed');
-                
-                // Карьера
-                document.getElementById('career-title').textContent = data.careerTitle || "Карьера";
-                renderSubmodules('career-list', data.careerItems);
-                if (data.careerCollapsed) document.getElementById('card-career').classList.add('collapsed');
-
-                // Мои работы
-                document.getElementById('projects-title').textContent = data.projectsTitle || "Мои работы";
-                if (data.projectItems) {
-                    projectsData = data.projectItems;
-                    renderProjectsGrid('projects-list', projectsData);
-                }
-                if (data.projectsCollapsed) document.getElementById('card-projects').classList.add('collapsed');
-
-                // Контакты
-                document.getElementById('contacts-title').textContent = data.contactsTitle || "Контакты";
-                const contactsHTML = `
-                    <address class="contacts-wrapper">
-                        Тел.: <span class="contact-row">
-                            <a href="tel:+79511567563">+7 951 156 75 63</a>
-                            <button class="copy-btn" onclick="copyToClipboard('+79511567563', this)" title="Скопировать" aria-label="Скопировать номер телефона">
-                                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            </button>
-                            <span class="copy-tooltip">Скопировано!</span>
-                        </span><br>
-                        E-mail: <span class="contact-row">
-                            <a href="mailto:alexander.masyuk@gmail.com">alexander.masyuk@gmail.com</a>
-                            <button class="copy-btn" onclick="copyToClipboard('alexander.masyuk@gmail.com', this)" title="Скопировать" aria-label="Скопировать адрес электронной почты">
-                                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            </button>
-                            <span class="copy-tooltip">Скопировано!</span>
-                        </span><br>
-                        Телеграм: <span class="contact-row">
-                            <a href="https://t.me/KlausterHargreeves" target="_blank">@KlausterHargreeves</a>
-                            <button class="copy-btn" onclick="copyToClipboard('@KlausterHargreeves', this)" title="Скопировать" aria-label="Скопировать логин Telegram">
-                                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            </button>
-                            <span class="copy-tooltip">Скопировано!</span>
-                        </span><br>
-                        Предпочтительный способ связи: телеграм, телефон
-                    </address>
-                `;
-                document.getElementById('contacts-text').innerHTML = contactsHTML;
-                if (data.contactsCollapsed) document.getElementById('card-contacts').classList.add('collapsed');
-
-                document.title = `${data.name} — ${data.role}`;
-                updateFloatingButton();
-            })
-            .catch(error => {
-                console.error('Ошибка загрузки profile.json:', error);
-            });
-
-        function renderSubmodules(containerId, items) {
-            const container = document.getElementById(containerId);
-            if (!items || items.length === 0) return;
-
-            container.innerHTML = items.map(item => {
-                const tagsHTML = item.tags ? `<div class="tags-container">${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : '';
-
-if (item.comment) {
-    return `
-        <div class="submodule-item">
-            <div class="submodule-grid">
-                <div class="submodule-main">
-                    <div class="submodule-header">
-                        <div>
-                            <div class="submodule-title">${item.title}</div>
-                            ${item.subtitle ? `<div class="submodule-subtitle">${item.subtitle}</div>` : ''}
-                        </div>
-                    </div>
-                    <div class="submodule-body">${item.description}</div>
-                    ${tagsHTML}
-                </div>
-                
-                <!-- Правая колонка с вынесенной датой -->
-                <div class="submodule-side-wrapper">
-                    ${item.date ? `<div class="submodule-date-container"><div class="submodule-date">${item.date}</div></div>` : ''}
-                    <div class="submodule-comment-side">
-                        ${item.comment}
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-                return `
-                    <div class="submodule-item">
-                        <div class="submodule-header">
-                            <div>
-                                <div class="submodule-title">${item.title}</div>
-                                ${item.subtitle ? `<div class="submodule-subtitle">${item.subtitle}</div>` : ''}
-                            </div>
-                            ${item.date ? `<div class="submodule-date">${item.date}</div>` : ''}
-                        </div>
-                        <div class="submodule-body">${item.description}</div>
-                        ${tagsHTML}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderProjectsGrid(containerId, projects) {
-            const container = document.getElementById(containerId);
-            if (!projects || projects.length === 0) return;
-
-            container.innerHTML = projects.map((item, index) => {
-                const tagsHTML = item.tags ? `<div class="tags-container">${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : '';
-                const imgHTML = item.previewImg ? `<img src="${item.previewImg}" alt="${item.title}" class="project-card-image">` : '';
-
-                return `
-                    <div class="project-card" onclick="openModal(${index})">
-                        ${imgHTML}
-                        <div class="project-card-content">
-                            <div class="project-card-title">${item.title}</div>
-                            ${item.subtitle ? `<div class="project-card-subtitle">${item.subtitle}</div>` : ''}
-                            <div class="project-card-desc">${item.description}</div>
-                            ${tagsHTML}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function openModal(index) {
-            const project = projectsData[index];
-            if (!project) return;
-
-            document.getElementById('modalTitle').textContent = project.title;
-            document.getElementById('modalSubtitle').textContent = `${project.subtitle || ''} ${project.date ? '• ' + project.date : ''}`;
-            
-            const modalTags = document.getElementById('modalTags');
-            modalTags.innerHTML = project.tags ? project.tags.map(t => `<span class="tag">${t}</span>`).join('') : '';
-
-            const modalGallery = document.getElementById('modalGallery');
-            modalGallery.innerHTML = project.modalImages ? project.modalImages.map(img => `<img src="${img}" alt="Скриншот проекта">`).join('') : '';
-
-            document.getElementById('modalDescription').innerText = project.fullDescription || project.description;
-
-            const linkContainer = document.getElementById('modalLinkContainer');
-            if (project.link) {
-                linkContainer.innerHTML = `<a href="${project.link}" target="_blank" class="modal-link-btn">Перейти к проекту &rarr;</a>`;
-            } else {
-                linkContainer.innerHTML = '';
-            }
-
-            document.getElementById('projectModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal(event) {
-            if (event && event.target !== event.currentTarget) return;
-            document.getElementById('projectModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function copyToClipboard(text, btnElement) {
-            navigator.clipboard.writeText(text).then(() => {
-                const tooltip = btnElement.nextElementSibling;
-                if (tooltip) {
-                    tooltip.classList.add('show');
-                    setTimeout(() => tooltip.classList.remove('show'), 1500);
-                }
-            });
-        }
-
-        function scrollToCard(cardId) {
-            const card = document.getElementById(cardId);
-            if (card) {
-                if (card.classList.contains('collapsed')) card.classList.remove('collapsed');
-                card.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        function toggleCard(cardId) {
-            const card = document.getElementById(cardId);
-            card.classList.toggle('collapsed');
-            updateFloatingButton();
-        }
-
-        function getMostVisibleExpandedCard() {
-            const cards = document.querySelectorAll('.card-collapsible:not(.collapsed)');
-            let maxVisibleHeight = 0;
-            let targetCard = null;
-
-            cards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                const visibleTop = Math.max(0, rect.top);
-                const visibleBottom = Math.min(window.innerHeight, rect.bottom);
-                const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-
-                if (visibleHeight > maxVisibleHeight) {
-                    maxVisibleHeight = visibleHeight;
-                    targetCard = card;
-                }
-            });
-
-            return { targetCard, maxVisibleHeight };
-        }
-
-        function updateFloatingButton() {
-            const btn = document.getElementById('floatingBtn');
-            const { targetCard, maxVisibleHeight } = getMostVisibleExpandedCard();
-
-            if (targetCard && maxVisibleHeight > 100) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
-        }
-
-        function collapseMostVisibleCard() {
-            const { targetCard } = getMostVisibleExpandedCard();
-            if (targetCard) {
-                targetCard.classList.add('collapsed');
-                updateFloatingButton();
-            }
-        }
-
-        let ticking = false;
-
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    onScrollUpdate();
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
-
-        function onScrollUpdate() {
-            const scrolled = window.scrollY;
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            
-            document.getElementById("progressBar").style.width = ((winScroll / height) * 100) + "%";
-
-            const sq1 = document.querySelector('.square-1');
-            const sq2 = document.querySelector('.square-2');
-            const gp1 = document.querySelector('.gamepad-1');
-            const gp2 = document.querySelector('.gamepad-2');
-
-            if (sq1) sq1.style.transform = `translate3d(0, ${scrolled * 0.22}px, 0) rotate(${20 + scrolled * 0.03}deg)`;
-            if (sq2) sq2.style.transform = `translate3d(0, ${-scrolled * 0.18}px, 0) rotate(${-15 - scrolled * 0.02}deg)`;
-            if (gp1) gp1.style.transform = `translate3d(0, ${-scrolled * 0.15}px, 0) rotate(${-12 + scrolled * 0.04}deg)`;
-            if (gp2) gp2.style.transform = `translate3d(0, ${scrolled * 0.2}px, 0) rotate(${25 - scrolled * 0.03}deg)`;
-
-            updateFloatingButton();
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
