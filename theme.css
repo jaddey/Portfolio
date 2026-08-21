@@ -36,6 +36,20 @@
     gap: 0.75rem;
 }
 
+/* Новая обертка для правой колонки (Дата + Комментарий) */
+.submodule-side-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Выравнивание даты по правому краю над рамкой */
+.submodule-date-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Блок комментария (теперь сжимается по высоте содержимого) */
 .submodule-comment-side {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-color);
@@ -45,7 +59,7 @@
     color: var(--text-secondary);
     white-space: pre-line;
     line-height: 1.6;
-    height: 100%;
+    /* Убрали height: 100%, чтобы не было лишнего пустой области */
 }
 
 @media (max-width: 768px) {
