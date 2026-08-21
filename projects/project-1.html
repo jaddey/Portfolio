@@ -1,0 +1,35 @@
+<!-- Обертка с уникальным классом для изоляции стилей -->
+<div class="project-modal-content project-solitaire">
+  <div class="project-header">
+    <h2>Проектирование уровней (Мобильный «Солитер»)</h2>
+    <div class="project-tags">
+      <span class="tag">Level Design</span>
+      <span class="tag">Unity</span>
+      <span class="tag">Solitaire</span>
+    </div>
+  </div>
+
+  <div class="project-body">
+    <p>Здесь подробное описание работы, задачи, которые решались в процессе, и особенности сборки уровней.</p>
+
+    <!-- Сетка с медиа-материалами -->
+    <div class="project-gallery">
+      <img src="projects/media/solitaire-1.jpg" alt="Level Screenshot">
+      <img src="projects/media/solitaire-2.jpg" alt="Level Screenshot">
+    </div>
+  </div>
+
+  <!-- Уникальные стили ТОЛЬКО для этой работы -->
+  <style>
+    .project-solitaire .project-gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .project-solitaire img {
+      width: 100%;
+      border-radius: 8px;
+    }
+  </style>
+</div>
