@@ -67,3 +67,32 @@
         grid-template-columns: 1fr;
     }
 }
+/* Стили для контента проекта в модалке */
+.modal-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1rem 0;
+    min-height: 300px; /* Минимальная высота для контента */
+}
+
+/* Навигация между проектами (точки) */
+.project-nav-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.project-nav-dots .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.project-nav-dots .dot.active {
+    background: var(--accent-primary);
+}
