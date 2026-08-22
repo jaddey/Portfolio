@@ -143,26 +143,53 @@ function openModal(index) {
     const project = projectsData[index];
     if (!project) return;
 
-    document.getElementById('modalTitle').textContent = project.title;
-    document.getElementById('modalSubtitle').textContent = `${project.subtitle || ''} ${project.date ? '• ' + project.date : ''}`;
+    // Если есть htmlFile, грузим его
+    if (project.htmlFile) {
+        document.getElementById('modalTitle').textContent = project.title;
+        document.getElementById('modalSubtitle').textContent = `${project.subtitle || ''} ${project.date ? '• ' + project.date : ''}`;
+        document.getElementById('modalGallery').innerHTML = '<div class="loader">Загрузка...</div>';
+        document.getElementById('modalDescription').innerHTML = '';
+        document.getElementById('modalTags').innerHTML = '';
+        document.getElementById('modalLinkContainer').innerHTML = '';
+        document.getElementById('projectModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
 
-    const modalTags = document.getElementById('modalTags');
-    modalTags.innerHTML = project.tags ? project.tags.map(t => `<span class="tag">${t}</span>`).join('') : '';
-
-    const modalGallery = document.getElementById('modalGallery');
-    modalGallery.innerHTML = project.modalImages ? project.modalImages.map(img => `<img src="${img}" alt="Скриншот проекта">`).join('') : '';
-
-    document.getElementById('modalDescription').innerText = project.fullDescription || project.description;
-
-    const linkContainer = document.getElementById('modalLinkContainer');
-    if (project.link) {
-        linkContainer.innerHTML = `<a href="${project.link}" target="_blank" class="modal-link-btn">Перейти к проекту &rarr;</a>`;
-    } else {
-        linkContainer.innerHTML = '';
+        fetch(project.htmlFile)
+            .then(response => {
+                if (!response.ok) throw new Error('Файл не найден');
+                return response.text();
+            })
+            .then(html => {
+                document.getElementById('modalGallery').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки проекта:', error);
+                document.getElementById('modalGallery').innerHTML = '<p>Не удалось загрузить проект.</p>';
+            });
     }
+    // Если нет htmlFile, используем старую логику (для совместимости)
+    else {
+        document.getElementById('modalTitle').textContent = project.title;
+        document.getElementById('modalSubtitle').textContent = `${project.subtitle || ''} ${project.date ? '• ' + project.date : ''}`;
 
-    document.getElementById('projectModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
+        const modalTags = document.getElementById('modalTags');
+        modalTags.innerHTML = project.tags ? project.tags.map(t => `<span class="tag">${t}</span>`).join('') : '';
+
+        const modalGallery = document.getElementById('modalGallery');
+        modalGallery.innerHTML = project.modalImages ? project.modalImages.map(img => `<img src="${img}" alt="Скриншот проекта">`).join('') : '';
+
+        document.getElementById('modalDescription').innerText = project.fullDescription || project.description;
+
+        const linkContainer = document.getElementById('modalLinkContainer');
+        if (project.link) {
+            linkContainer.innerHTML = `<a href="${project.link}" target="_blank" class="modal-link-btn">Перейти к проекту &rarr;</a>`;
+        } else {
+            linkContainer.innerHTML = '';
+        }
+
+        document.getElementById('projectModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
 }
 
 // Close project modal
@@ -273,32 +300,4 @@ function onScrollUpdate() {
     if (gp2) gp2.style.transform = `translate3d(0, ${scrolled * 0.2}px, 0) rotate(${25 - scrolled * 0.03}deg)`;
 
     updateFloatingButton();
-    function openModal(index) {
-    const project = projectsData[index];
-    if (!project || !project.htmlFile) return;
-
-    // Показываем индикатор загрузки
-    document.getElementById('modalTitle').textContent = project.title;
-    document.getElementById('modalSubtitle').textContent = project.subtitle || '';
-    document.getElementById('modalGallery').innerHTML = '<div class="loader">Загрузка...</div>';
-    document.getElementById('modalDescription').innerHTML = '';
-    document.getElementById('modalLinkContainer').innerHTML = '';
-    document.getElementById('projectModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-
-    // Загружаем HTML-файл проекта
-    fetch(project.htmlFile)
-        .then(response => {
-            if (!response.ok) throw new Error('Файл не найден');
-            return response.text();
-        })
-        .then(html => {
-            // Вставляем загруженный HTML в модальное окно
-            document.getElementById('modalGallery').innerHTML = html;
-        })
-        .catch(error => {
-            console.error('Ошибка загрузки проекта:', error);
-            document.getElementById('modalGallery').innerHTML = '<p>Не удалось загрузить проект.</p>';
-        });
-}
 }
