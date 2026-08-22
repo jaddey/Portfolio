@@ -273,4 +273,32 @@ function onScrollUpdate() {
     if (gp2) gp2.style.transform = `translate3d(0, ${scrolled * 0.2}px, 0) rotate(${25 - scrolled * 0.03}deg)`;
 
     updateFloatingButton();
+    function openModal(index) {
+    const project = projectsData[index];
+    if (!project || !project.htmlFile) return;
+
+    // Показываем индикатор загрузки
+    document.getElementById('modalTitle').textContent = project.title;
+    document.getElementById('modalSubtitle').textContent = project.subtitle || '';
+    document.getElementById('modalGallery').innerHTML = '<div class="loader">Загрузка...</div>';
+    document.getElementById('modalDescription').innerHTML = '';
+    document.getElementById('modalLinkContainer').innerHTML = '';
+    document.getElementById('projectModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Загружаем HTML-файл проекта
+    fetch(project.htmlFile)
+        .then(response => {
+            if (!response.ok) throw new Error('Файл не найден');
+            return response.text();
+        })
+        .then(html => {
+            // Вставляем загруженный HTML в модальное окно
+            document.getElementById('modalGallery').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки проекта:', error);
+            document.getElementById('modalGallery').innerHTML = '<p>Не удалось загрузить проект.</p>';
+        });
+}
 }
