@@ -57,7 +57,7 @@
       "subtitle": "Категория / Роль",
       "date": "2024",
       "previewImg": "images/project-1-preview.jpg",
-      "htmlFile": "projects/project-1.html"  // Путь к HTML-файлу проекта
+      "htmlFile": "projects/project-1.html"
     },
 ],
   "contactsTitle": "Контакты",
