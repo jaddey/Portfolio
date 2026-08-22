@@ -1,11 +1,197 @@
-<!-- projects/project-1.html -->
-<div class="project-content">
-    <h3>Название проекта</h3>
-    <p>Описание проекта...</p>
-    <img src="../images/project-1-screenshot.jpg" alt="Скриншот">
-    <div class="project-nav-dots">
-        <div class="dot active"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --project-bg: #0a0f14; /* Темнее основного фона для контраста */
+            --project-accent: #2dd4bf; /* Оттенок бирюзы для акцентов */
+            --particle-color: rgba(45, 212, 191, 0.6);
+        }
+
+        .project-content {
+            background: var(--project-bg);
+            color: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Анимация плывущих частиц */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--particle-color);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Контент поверх частиц */
+        .project-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .project-inner h3 {
+            font-size: 2rem;
+            color: var(--project-accent);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(45, 212, 191, 0.3);
+        }
+
+        .project-inner p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #a0aec0;
+            margin-bottom: 2rem;
+        }
+
+        .project-inner img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid rgba(45, 212, 191, 0.3);
+            box-shadow: 0 0 20px rgba(45, 212, 191, 0.2);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .project-inner img:hover {
+            transform: scale(1.02);
+        }
+
+        /* Навигация точками */
+        .project-nav-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 2rem;
+        }
+
+        .project-nav-dots .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .project-nav-dots .dot:hover {
+            background: rgba(45, 212, 191, 0.5);
+            transform: scale(1.2);
+        }
+
+        .project-nav-dots .dot.active {
+            background: var(--project-accent);
+            border-color: var(--project-accent);
+            box-shadow: 0 0 10px var(--project-accent);
+        }
+
+        /* Анимация для текста */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .project-inner h3 {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .project-inner p {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .project-inner img {
+            animation: fadeIn 1s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="project-content">
+        <div class="particles" id="particles"></div>
+        <div class="project-inner">
+            <h3>Pickle Peter</h3>
+            <p>
+                Прототип моей первой игры про огурчика Питера, который летает в космосе,
+                собирая укроп для рассола и уворачиваясь от космических пираний.
+                <br><br>
+                К сожалению, сохранился только билд APK на моём старом телефоне.
+            </p>
+            <img src="../projects/Media/Pickle_Peter.gif" alt="Pickle Peter - скриншот игры">
+            <div class="project-nav-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <script>
+        // Создаём частицы для фона
+        document.addEventListener('DOMContentLoaded', () => {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 15;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+
+                // Случайные параметры для каждой частицы
+                const size = Math.random() * 8 + 4;
+                const left = Math.random() * 100;
+                const delay = Math.random() * 6;
+                const duration = Math.random() * 4 + 4;
+
+                particle.style = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${left}%;
+                    animation-delay: ${delay}s;
+                    animation-duration: ${duration}s;
+                `;
+
+                particlesContainer.appendChild(particle);
+            }
+        });
+    </script>
+</body>
+</html>
