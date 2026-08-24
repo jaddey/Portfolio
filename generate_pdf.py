@@ -106,7 +106,7 @@ html_content += f"""
         <div style="font-size: 9pt;">
             Тел.: +7 951 156 75 63<br>
             E-mail: alexander.masyuk@gmail.com<br>
-            Telegram: @KlausterHargreeves
+            Telegram: @jaddy_LD
         </div>
     </div>
 </body>
