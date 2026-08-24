@@ -44,6 +44,7 @@
       "subtitle": "Developer",
       "date": "2021",
       "previewImg": "projects/Media/Pickle_Peter.gif",
+      "description": "Прототип моей первой игры",
       "htmlFile": "projects/project-1.html",
       "tags": ["Unity", "C#"]
     }
