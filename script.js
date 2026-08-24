@@ -150,7 +150,7 @@ function openModal(index) {
         document.getElementById('modalGallery').innerHTML = '<div class="loader">Загрузка...</div>';
         document.getElementById('modalDescription').innerHTML = '';
         document.getElementById('modalTags').innerHTML = '';
-        document.getElementById('modalLinkContainer').innerHTML = '';
+        document.getElementById('modalLinkContainer').innerHTML = ''; // <-- Очищаем контейнер для ссылки
         document.getElementById('projectModal').classList.add('active');
         document.body.style.overflow = 'hidden';
 
@@ -167,7 +167,7 @@ function openModal(index) {
                 document.getElementById('modalGallery').innerHTML = '<p>Не удалось загрузить проект.</p>';
             });
     }
-    // Если нет htmlFile, используем старую логику (для совместимости)
+    // Если нет htmlFile, используем старую логику
     else {
         document.getElementById('modalTitle').textContent = project.title;
         document.getElementById('modalSubtitle').textContent = `${project.subtitle || ''} ${project.date ? '• ' + project.date : ''}`;
@@ -184,7 +184,7 @@ function openModal(index) {
         if (project.link) {
             linkContainer.innerHTML = `<a href="${project.link}" target="_blank" class="modal-link-btn">Перейти к проекту &rarr;</a>`;
         } else {
-            linkContainer.innerHTML = '';
+            linkContainer.innerHTML = ''; // <-- Убираем "undefined"
         }
 
         document.getElementById('projectModal').classList.add('active');
