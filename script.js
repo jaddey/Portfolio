@@ -191,7 +191,6 @@ function openModal(index) {
         document.body.style.overflow = 'hidden';
     }
 }
-
 // Close project modal
 function closeModal(event) {
     if (event && event.target !== event.currentTarget) return;
