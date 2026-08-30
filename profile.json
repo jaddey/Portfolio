@@ -48,6 +48,15 @@
       "description": "Прототип моей первой игры",
       "htmlFile": "projects/project-1.html",
       "tags": ["Unity", "C#"]
+    },
+            {
+      "title": "Скоро здесь будут еще проекты",
+      "subtitle": "Developer",
+      "date": "----",
+      "previewImg": "projects/Media/plug.jpg",
+      "description": "Скоро здесь будут еще проекты",
+      "htmlFile": "projects/plug.html",
+      "tags": ["Unity", "C#"]
     }
 ],
   "contactsTitle": "Контакты",
