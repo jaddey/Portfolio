@@ -40,6 +40,15 @@
     }
   ],
   "projectItems": [
+         {
+      "title": "TowerDefense",
+      "subtitle": "Developer",
+      "date": "2023-...",
+      "previewImg": "projects/Media/Tower_Defense.jpg",
+      "description": "Инди проект над которым работаю в свободное время",
+      "htmlFile": "projects/TD.html",
+      "tags": ["Unity", "C#", "Particle System", "ShaderGraph", "PostProcessing", "URP", "GameDesign"]
+    },
         {
       "title": "Pickle Peter",
       "subtitle": "Developer",
