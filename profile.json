@@ -40,6 +40,15 @@
     }
   ],
   "projectItems": [
+    {
+      "title": "SynthWave Rider",
+      "subtitle": "Developer",
+      "date": "2026",
+      "previewImg": "projects/Media/SynthWaveRider.jpg",
+      "description": "Небольшая браузерная игра",
+      "htmlFile": "projects/SynthWaveRider.html",
+      "tags": ["html", "JavaScript", "GameDesign"]
+    },
          {
       "title": "TowerDefense",
       "subtitle": "Developer",
