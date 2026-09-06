@@ -86,8 +86,6 @@ function renderSubmodules(containerId, items) {
                             <div class="submodule-body">${item.description}</div>
                             ${tagsHTML}
                         </div>
-
-                        <!-- Right column with date and comment -->
                         <div class="submodule-side-wrapper">
                             ${item.date ? `<div class="submodule-date-container"><div class="submodule-date">${item.date}</div></div>` : ''}
                             <div class="submodule-comment-side">
@@ -130,7 +128,7 @@ function renderProjectsGrid(containerId, projects) {
                 <div class="project-card-content">
                     <div class="project-card-title">${item.title}</div>
                     ${item.subtitle ? `<div class="project-card-subtitle">${item.subtitle}</div>` : ''}
-                    <div class="project-card-desc">${item.description}</div>
+                    <div class="project-card-desc">${item.description || ''}</div>
                     ${tagsHTML}
                 </div>
             </div>
@@ -143,23 +141,21 @@ function openModal(index) {
     const project = projectsData[index];
     if (!project) return;
 
-    // Очищаем ВСЕ поля модального окна перед заполнением
-    document.getElementById('modalTitle').textContent = '';
-    document.getElementById('modalSubtitle').textContent = '';
+    // Очищаем все поля модального окна
+    document.getElementById('modalTitle').textContent = project.title;
+    document.getElementById('modalSubtitle').textContent = `${project.subtitle || ''}${project.date ? ' • ' + project.date : ''}`;
     document.getElementById('modalGallery').innerHTML = '';
-    document.getElementById('modalDescription').textContent = ''; // <-- ВАЖНО: Очищаем описание!
+    document.getElementById('modalDescription').textContent = '';
     document.getElementById('modalTags').innerHTML = '';
     document.getElementById('modalLinkContainer').innerHTML = '';
 
-    // Устанавливаем заголовок и подзаголовок
-    document.getElementById('modalTitle').textContent = project.title;
-    document.getElementById('modalSubtitle').textContent = `${project.subtitle || ''}${project.date ? ' • ' + project.date : ''}`;
+    // Показываем модальное окно
+    document.getElementById('projectModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
 
-    // Если есть htmlFile, грузим его
+    // Если есть htmlFile, подгружаем его
     if (project.htmlFile) {
         document.getElementById('modalGallery').innerHTML = '<div class="loader">Загрузка...</div>';
-        document.getElementById('projectModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
 
         fetch(project.htmlFile)
             .then(response => {
@@ -174,38 +170,28 @@ function openModal(index) {
                 document.getElementById('modalGallery').innerHTML = '<p>Не удалось загрузить проект.</p>';
             });
     }
-    // Если нет htmlFile, используем старую логику
+    // Иначе используем старую логику (для совместимости)
     else {
-        // Теги
         if (project.tags) {
             document.getElementById('modalTags').innerHTML = project.tags.map(t => `<span class="tag">${t}</span>`).join('');
         }
 
-        // Изображения
         if (project.modalImages) {
             document.getElementById('modalGallery').innerHTML = project.modalImages.map(img => `<img src="${img}" alt="Скриншот проекта">`).join('');
         }
 
-        // Описание (только если есть)
         if (project.fullDescription) {
             document.getElementById('modalDescription').textContent = project.fullDescription;
         } else if (project.description) {
             document.getElementById('modalDescription').textContent = project.description;
         }
 
-        // Ссылка (только если есть)
         if (project.link) {
-            document.getElementById('modalLinkContainer').innerHTML = `
-                <a href="${project.link}" target="_blank" class="modal-link-btn">
-                    Перейти к проекту &rarr;
-                </a>
-            `;
+            document.getElementById('modalLinkContainer').innerHTML = `<a href="${project.link}" target="_blank" class="modal-link-btn">Перейти к проекту &rarr;</a>`;
         }
-
-        document.getElementById('projectModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
     }
 }
+
 // Close project modal
 function closeModal(event) {
     if (event && event.target !== event.currentTarget) return;
@@ -284,7 +270,6 @@ function collapseMostVisibleCard() {
 
 // Scroll event handler with throttling
 let ticking = false;
-
 window.addEventListener('scroll', () => {
     if (!ticking) {
         window.requestAnimationFrame(() => {
