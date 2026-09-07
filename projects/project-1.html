@@ -2,39 +2,37 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Pickle Peter — прототип первой игры от Александера Масюка. Игра про огурчика Питера в космосе.">
-    <title>Pickle Peter — Проект | Портфолио Александера Масюка</title>
-    <link rel="stylesheet" href="../theme.css">
     <style>
         :root {
-            --project-accent: #2dd4bf; /* Бирюзовый акцент для Pickle Peter */
+            --project-bg: #0a0f14;
+            --project-accent: #2dd4bf;
+            --particle-color: rgba(45, 212, 191, 0.6);
         }
 
         .project-content {
-            background: var(--bg-main);
-            color: var(--text-primary);
+            background: var(--project-bg);
+            color: #fff;
             padding: 2rem;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
+            border-radius: 12px;
             position: relative;
+            overflow: hidden;
             min-height: 400px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            max-width: 900px;
-            margin: 2rem auto;
         }
 
         .project-inner {
+            position: relative;
+            z-index: 1;
             max-width: 800px;
             width: 100%;
         }
 
         .project-inner h3 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: var(--project-accent);
             margin-bottom: 1rem;
             text-shadow: 0 0 10px rgba(45, 212, 191, 0.3);
@@ -43,59 +41,21 @@
         .project-inner p {
             font-size: 1.1rem;
             line-height: 1.8;
-            color: var(--text-secondary);
+            color: #a0aec0;
             margin-bottom: 2rem;
         }
 
         .project-inner img {
             max-width: 100%;
-            border-radius: 12px;
+            border-radius: 8px;
             border: 1px solid rgba(45, 212, 191, 0.3);
             box-shadow: 0 0 20px rgba(45, 212, 191, 0.2);
             margin-bottom: 2rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
         }
 
         .project-inner img:hover {
             transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(45, 212, 191, 0.4);
-        }
-
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .tag {
-            font-size: 0.85rem;
-            background: rgba(45, 212, 191, 0.15);
-            color: var(--project-accent);
-            padding: 0.3rem 0.7rem;
-            border-radius: 6px;
-            border: 1px solid rgba(45, 212, 191, 0.3);
-            font-weight: 500;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 2rem;
-            padding: 0.6rem 1.2rem;
-            background: var(--card-bg);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .back-link:hover {
-            background: var(--border-hover);
-            border-color: var(--border-hover);
-            color: var(--accent-primary);
         }
 
         @keyframes fadeIn {
@@ -126,12 +86,7 @@
                 <br><br>
                 К сожалению, сохранился только билд APK на моём старом телефоне.
             </p>
-            <img src="Media/Pickle_Peter.gif" alt="Pickle Peter — скриншот игры">
-            <div class="project-tags">
-                <span class="tag">Unity</span>
-                <span class="tag">C#</span>
-            </div>
-            <a href="../index.html" class="back-link">← Вернуться к портфолио</a>
+            <img src="Media/Pickle_Peter.gif" alt="Pickle Peter - скриншот игры">
         </div>
     </div>
 </body>
