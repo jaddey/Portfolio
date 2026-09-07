@@ -54,22 +54,17 @@
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
             gap: 1rem;
-            padding-bottom: 0.5rem;
+            padding-bottom: 1.5rem;
             -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
 
         .slider::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .slider::-webkit-scrollbar-thumb {
-            background: rgba(45, 212, 191, 0.3);
-            border-radius: 3px;
+            display: none;
         }
 
         .slide {
-            flex: 0 0 auto;
-            width: 100%;
+            flex: 0 0 100%;
             scroll-snap-align: start;
         }
 
@@ -78,7 +73,6 @@
             border-radius: 8px;
             border: 1px solid rgba(45, 212, 191, 0.3);
             box-shadow: 0 0 20px rgba(45, 212, 191, 0.2);
-            margin-bottom: 0.75rem;
             transition: transform 0.3s ease;
         }
 
@@ -86,34 +80,26 @@
             transform: scale(1.02);
         }
 
-        .slide-description {
-            font-size: 0.9rem;
-            color: #a0aec0;
-            line-height: 1.6;
-            text-align: left;
-            padding: 0 0.5rem;
-        }
-
         /* Точки навигации */
         .slider-dots {
             display: flex;
             justify-content: center;
             gap: 0.75rem;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
         }
 
         .slider-dots .dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(45, 212, 191, 0.3);
             cursor: pointer;
             transition: all 0.3s ease;
             border: 1px solid transparent;
         }
 
         .slider-dots .dot:hover {
-            background: rgba(45, 212, 191, 0.5);
+            background: rgba(45, 212, 191, 0.6);
             transform: scale(1.2);
         }
 
@@ -155,22 +141,13 @@
             <div class="slider-container">
                 <div class="slider" id="slider">
                     <div class="slide">
-                        <img src="projects/Media/Tower_Defense.gif" alt="TowerDefense - основной скриншот">
-                        <p class="slide-description">
-                            Основной экран игры с базовой механикой защиты башни.
-                        </p>
+                        <img src="projects/Media/Tower_Defense.jpg" alt="TowerDefense - скриншот 1">
                     </div>
                     <div class="slide">
-                        <img src="projects/Media/Tower_Defense_2.gif" alt="TowerDefense - система частиц">
-                        <p class="slide-description">
-                            Система частиц для эффектов взрывов и атак.
-                        </p>
+                        <img src="projects/Media/Tower_Defense_2.jpg" alt="TowerDefense - скриншот 2">
                     </div>
                     <div class="slide">
-                        <img src="projects/Media/Tower_Defense_2.gif" alt="TowerDefense - ShaderGraph">
-                        <p class="slide-description">
-                            Пример работы ShaderGraph для визуальных эффектов.
-                        </p>
+                        <img src="projects/Media/Tower_Defense_3.jpg" alt="TowerDefense - скриншот 3">
                     </div>
                 </div>
                 <div class="slider-dots" id="sliderDots"></div>
