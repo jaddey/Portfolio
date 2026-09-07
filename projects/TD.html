@@ -41,19 +41,89 @@
             margin-bottom: 2rem;
         }
 
-        .project-inner img {
+        /* Слайдер */
+        .slider-container {
+            width: 100%;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            gap: 1rem;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .slider::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .slider::-webkit-scrollbar-thumb {
+            background: rgba(45, 212, 191, 0.3);
+            border-radius: 3px;
+        }
+
+        .slide {
+            flex: 0 0 auto;
+            width: 100%;
+            scroll-snap-align: start;
+        }
+
+        .slide img {
             max-width: 100%;
             border-radius: 8px;
             border: 1px solid rgba(45, 212, 191, 0.3);
             box-shadow: 0 0 20px rgba(45, 212, 191, 0.2);
-            margin-bottom: 2rem;
+            margin-bottom: 0.75rem;
             transition: transform 0.3s ease;
         }
 
-        .project-inner img:hover {
+        .slide img:hover {
             transform: scale(1.02);
         }
 
+        .slide-description {
+            font-size: 0.9rem;
+            color: #a0aec0;
+            line-height: 1.6;
+            text-align: left;
+            padding: 0 0.5rem;
+        }
+
+        /* Точки навигации */
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .slider-dots .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .slider-dots .dot:hover {
+            background: rgba(45, 212, 191, 0.5);
+            transform: scale(1.2);
+        }
+
+        .slider-dots .dot.active {
+            background: var(--project-accent);
+            border-color: var(--project-accent);
+            box-shadow: 0 0 10px var(--project-accent);
+        }
+
+        /* Анимации */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -67,7 +137,7 @@
             animation: fadeIn 0.8s ease-out;
         }
 
-        .project-inner img {
+        .slider-container {
             animation: fadeIn 1s ease-out;
         }
     </style>
@@ -81,8 +151,87 @@
                 Это башенная защита с уникальной механикой, разработанная на Unity с использованием
                 современных технологий, таких как ShaderGraph и URP для создания потрясающей графики.
             </p>
-            <img src="Media/Tower_Defense.jpg" alt="TowerDefense - скриншот игры">
+
+            <div class="slider-container">
+                <div class="slider" id="slider">
+                    <div class="slide">
+                        <img src="projects/Media/Tower_Defense.jpg" alt="TowerDefense - основной скриншот">
+                        <p class="slide-description">
+                            Основной экран игры с базовой механикой защиты башни.
+                        </p>
+                    </div>
+                    <div class="slide">
+                        <img src="projects/Media/Tower_Defense_2.jpg" alt="TowerDefense - система частиц">
+                        <p class="slide-description">
+                            Система частиц для эффектов взрывов и атак.
+                        </p>
+                    </div>
+                    <div class="slide">
+                        <img src="projects/Media/Tower_Defense_3.jpg" alt="TowerDefense - ShaderGraph">
+                        <p class="slide-description">
+                            Пример работы ShaderGraph для визуальных эффектов.
+                        </p>
+                    </div>
+                </div>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slider = document.getElementById('slider');
+            const dotsContainer = document.getElementById('sliderDots');
+            const slides = slider.querySelectorAll('.slide');
+
+            // Создаём точки навигации
+            slides.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    scrollToSlide(index);
+                });
+                dotsContainer.appendChild(dot);
+            });
+
+            // Прокрутка к слайду
+            function scrollToSlide(index) {
+                const slide = slides[index];
+                if (slide) {
+                    slider.scrollTo({
+                        left: slide.offsetLeft - slider.offsetLeft,
+                        behavior: 'smooth'
+                    });
+
+                    // Обновляем активную точку
+                    const dots = dotsContainer.querySelectorAll('.dot');
+                    dots.forEach((dot, i) => {
+                        dot.classList.toggle('active', i === index);
+                    });
+                }
+            }
+
+            // Обновляем активную точку при прокрутке
+            slider.addEventListener('scroll', () => {
+                const dots = dotsContainer.querySelectorAll('.dot');
+                let activeIndex = 0;
+
+                slides.forEach((slide, index) => {
+                    const rect = slide.getBoundingClientRect();
+                    const sliderRect = slider.getBoundingClientRect();
+                    const isVisible = rect.left >= sliderRect.left && rect.right <= sliderRect.right;
+
+                    if (isVisible) {
+                        activeIndex = index;
+                    }
+                });
+
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === activeIndex);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
