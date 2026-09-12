@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* ──────────────────────────────────────────────
+           Резервные CSS-переменные (для автономного
+           просмотра вне основной страницы).
+           При загрузке через innerHTML в модалку
+           наследуются переменные из theme.css.
+           ────────────────────────────────────────────── */
+        :root {
+            --bg-main: #1b1e24;
+            --card-bg: rgba(21, 23, 28, 0.85);
+            --accent-primary: #106b6e;
+            --accent-hover: #148f93;
+            --accent-dark: #0e4b4e;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-body: #f8fafc;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(16, 107, 110, 0.5);
+        }
+
+        /* ── Расширяем модалку до ~80% экрана ── */
+        .modal-container {
+            max-width: 80vw !important;
+            width: 80vw !important;
+        }
+
+        /* ── Контейнер проекта ── */
+        .tp-content {
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* ════════════════════════════════════════════════
+           Текстовый блок (бирюзовый) — вверху
+           ════════════════════════════════════════════════ */
+        .tp-text-block {
+            background: linear-gradient(135deg, rgba(16, 107, 110, 0.18), rgba(14, 75, 78, 0.06));
+            border: 1px solid var(--border-hover);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+        }
+
+        .tp-text-block h3 {
+            font-size: 1.6rem;
+            color: var(--accent-hover);
+            margin-bottom: 0.75rem;
+            text-shadow: 0 0 10px rgba(20, 143, 147, 0.3);
+        }
+
+        .tp-text-block p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            white-space: pre-line;
+        }
+
+        /* ════════════════════════════════════════════════
+           Галерея
+           ════════════════════════════════════════════════ */
+        .tp-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .tp-gallery-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        /* ── Миниатюры (зелёные блоки слева/справа) ── */
+        .tp-thumb-wrapper {
+            flex: 0 0 14%;
+            max-width: 150px;
+            position: relative;
+            cursor: pointer;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 12px rgba(16, 107, 110, 0.25);
+            aspect-ratio: 16 / 10;
+            background: linear-gradient(135deg, rgba(16, 107, 110, 0.1), rgba(14, 75, 78, 0.04));
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        .tp-thumb-wrapper:hover {
+            border-color: var(--accent-hover);
+            box-shadow: 0 0 20px rgba(20, 143, 147, 0.4);
+            transform: scale(1.03);
+        }
+
+        .tp-thumb-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.5;
+            transition: opacity 0.25s ease;
+        }
+
+        .tp-thumb-wrapper:hover img {
+            opacity: 0.85;
+        }
+
+        .tp-thumb-arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.8rem;
+            color: var(--accent-hover);
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            opacity: 0.8;
+            transition: opacity 0.25s ease;
+        }
+
+        .tp-thumb-wrapper:hover .tp-thumb-arrow {
+            opacity: 1;
+        }
+
+        /* ── Главное изображение (центр) ── */
+        .tp-main-wrapper {
+            flex: 1 1 auto;
+            max-width: 58%;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--accent-hover);
+            box-shadow: 0 0 24px rgba(20, 143, 147, 0.3);
+            aspect-ratio: 16 / 10;
+            background: linear-gradient(135deg, rgba(16, 107, 110, 0.12), rgba(14, 75, 78, 0.04));
+        }
+
+        .tp-main-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.3s ease;
+        }
+
+        /* ── Точки навигации ── */
+        .tp-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .tp-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .tp-dot:hover {
+            background: rgba(20, 143, 147, 0.5);
+            transform: scale(1.2);
+        }
+
+        .tp-dot.active {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+            box-shadow: 0 0 10px var(--accent-hover);
+        }
+
+        /* ── Адаптивность ── */
+        @media (max-width: 768px) {
+            .tp-gallery-row {
+                gap: 0.75rem;
+            }
+            .tp-thumb-wrapper {
+                flex: 0 0 18%;
+                max-width: 100px;
+            }
+            .tp-main-wrapper {
+                max-width: 52%;
+            }
+            .tp-thumb-arrow {
+                font-size: 1.3rem;
+            }
+            .tp-text-block {
+                padding: 1rem 1.25rem;
+            }
+            .tp-text-block h3 {
+                font-size: 1.3rem;
+            }
+            .tp-text-block p {
+                font-size: 0.95rem;
+            }
+            .modal-container {
+                max-width: 92vw !important;
+                width: 92vw !important;
+            }
+        }
+
+        /* ── Анимация появления ── */
+        @keyframes tpFadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .tp-text-block { animation: tpFadeIn 0.5s ease-out; }
+        .tp-gallery    { animation: tpFadeIn 0.7s ease-out; }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════════════════
+         Скрытый bootstrap-img (data URI, грузится всегда).
+         Поскольку <script> НЕ выполняется при вставке через
+         innerHTML, вся логика галереи определяется здесь
+         в onload. При автономном просмотре также сработает
+         <script> ниже — конфликт исключён флагом __tpReady.
+         ═══════════════════════════════════════════════════ -->
+    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+         alt="" style="display:none" onload="
+        if (window.__tpReady) return;
+        window.__tpReady = true;
+        (function () {
+            var imgs = ['test_1','test_2','test_3','test_4','test_5','test_6'];
+            var idx = 0, n = imgs.length, base = 'projects/Media/';
+
+            function render() {
+                var main = document.getElementById('tpMain');
+                if (!main) return;
+                main.src = base + imgs[idx] + '.jpg';
+                document.getElementById('tpPrev').src = base + imgs[(idx - 1 + n) % n] + '.jpg';
+                document.getElementById('tpNext').src = base + imgs[(idx + 1) % n] + '.jpg';
+                var dots = document.getElementById('tpDots');
+                if (!dots.children.length) {
+                    for (var k = 0; k < n; k++) {
+                        var s = document.createElement('span');
+                        s.className = 'tp-dot';
+                        s.onclick = (function (x) { return function () { tpGo(x); }; })(k);
+                        dots.appendChild(s);
+                    }
+                }
+                for (var k = 0; k < n; k++) {
+                    dots.children[k].className = 'tp-dot' + (k === idx ? ' active' : '');
+                }
+            }
+
+            window.tpNav = function (d) { idx = (idx + d + n) % n; render(); };
+            window.tpGo = function (x) { idx = x; render(); };
+
+            render();
+        })();
+    ">
+
+    <!-- ═══════════════════════════════════════════════════
+         Контент проекта
+         ═══════════════════════════════════════════════════ -->
+    <div class="tp-content">
+
+        <!-- Бирюзовый текстовый блок -->
+        <div class="tp-text-block">
+            <h3>Test Project</h3>
+            <p>Тестовый прототип страницы проекта.
+
+Галерея поддерживает перелистывание: кликайте по миниатюрам
+слева и справа для перехода к предыдущему или следующему
+изображению. Также можно использовать точки навигации внизу.
+
+Изображения: projects/Media/test_1.jpg … test_6.jpg</p>
+        </div>
+
+        <!-- Галерея: [превью] [активное] [превью] -->
+        <div class="tp-gallery">
+            <div class="tp-gallery-row">
+
+                <!-- Миниатюра предыдущего изображения -->
+                <div class="tp-thumb-wrapper" onclick="tpNav(-1)">
+                    <img id="tpPrev" src="projects/Media/test_6.jpg"
+                         alt="Предыдущее"
+                         onerror="this.onerror=null;this.style.opacity='0'">
+                    <span class="tp-thumb-arrow">&#9664;</span>
+                </div>
+
+                <!-- Активное изображение (центр) -->
+                <div class="tp-main-wrapper">
+                    <img id="tpMain" src="projects/Media/test_1.jpg"
+                         alt="Активное изображение"
+                         onerror="this.onerror=null;this.style.opacity='0'">
+                </div>
+
+                <!-- Миниатюра следующего изображения -->
+                <div class="tp-thumb-wrapper" onclick="tpNav(1)">
+                    <img id="tpNext" src="projects/Media/test_2.jpg"
+                         alt="Следующее"
+                         onerror="this.onerror=null;this.style.opacity='0'">
+                    <span class="tp-thumb-arrow">&#9654;</span>
+                </div>
+
+            </div>
+            <!-- Точки навигации -->
+            <div class="tp-dots" id="tpDots"></div>
+        </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         Script — выполняется при автономном просмотре
+         и если openModal в script.js реинжектит скрипты.
+         Дублирует логику из onload bootstrap.
+         ═══════════════════════════════════════════════════ -->
+    <script>
+        (function () {
+            if (window.__tpReady) return;
+            window.__tpReady = true;
+
+            var imgs = ['test_1','test_2','test_3','test_4','test_5','test_6'];
+            var idx = 0, n = imgs.length, base = 'projects/Media/';
+
+            function render() {
+                var main = document.getElementById('tpMain');
+                if (!main) return;
+                main.src = base + imgs[idx] + '.jpg';
+                document.getElementById('tpPrev').src = base + imgs[(idx - 1 + n) % n] + '.jpg';
+                document.getElementById('tpNext').src = base + imgs[(idx + 1) % n] + '.jpg';
+                var dots = document.getElementById('tpDots');
+                if (!dots.children.length) {
+                    for (var k = 0; k < n; k++) {
+                        var s = document.createElement('span');
+                        s.className = 'tp-dot';
+                        s.onclick = (function (x) { return function () { window.tpGo(x); }; })(k);
+                        dots.appendChild(s);
+                    }
+                }
+                for (var k = 0; k < n; k++) {
+                    dots.children[k].className = 'tp-dot' + (k === idx ? ' active' : '');
+                }
+            }
+
+            window.tpNav = function (d) { idx = (idx + d + n) % n; render(); };
+            window.tpGo = function (x) { idx = x; render(); };
+
+            render();
+        })();
+    </script>
+
+</body>
+</html>
