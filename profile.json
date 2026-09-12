@@ -40,16 +40,6 @@
     }
   ],
   "projectItems": [
-         
-    {
-  "title": "Test Project",
-  "subtitle": "Developer",
-  "date": "2026",
-  "previewImg": "projects/Media/test_1.jpg",
-  "description": "Тестовый прототип",
-  "htmlFile": "projects/test_project.html",
-  "tags": ["Test"]
-},
     {
       "title": "TowerDefense",
       "subtitle": "Developer",
