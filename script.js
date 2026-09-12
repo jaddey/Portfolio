@@ -148,38 +148,39 @@ function renderProjectsGrid(containerId, projects) {
     ).join('');
 
     // Колесо мыши → горизонтальная прокрутка (когда мышь над блоком)
+    // ВСЕГДА перехватываем — страница не скроллится пока курсор над блоком
     if (!container.__wheelAdded) {
         container.__wheelAdded = true;
         container.addEventListener('wheel', function(e) {
             if (e.deltaY === 0) return;
             var maxScroll = container.scrollWidth - container.clientWidth;
-            if (maxScroll <= 0) return;
-            if (container.scrollLeft <= 0 && e.deltaY < 0) return;
-            if (container.scrollLeft >= maxScroll && e.deltaY > 0) return;
+            if (maxScroll <= 0) return;  // нечего листать — отдаём странице
             e.preventDefault();
             container.scrollLeft += e.deltaY;
         }, { passive: false });
     }
 
-    // Обновление активной точки при прокрутке
+    // Подсветка видимых точек (до 3 одновременно)
     if (!container.__scrollAdded) {
         container.__scrollAdded = true;
-        container.addEventListener('scroll', function() {
-            var cards = container.querySelectorAll('.project-card');
-            var dots = dotsContainer.querySelectorAll('.projects-dot');
-            var activeIndex = 0;
-            cards.forEach(function(card, index) {
-                var rect = card.getBoundingClientRect();
-                var containerRect = container.getBoundingClientRect();
-                if (rect.left >= containerRect.left - card.offsetWidth / 2) {
-                    activeIndex = index;
-                }
-            });
-            dots.forEach(function(dot, i) {
-                dot.classList.toggle('active', i === activeIndex);
-            });
+        container.addEventListener('scroll', updateProjectsDots);
+    }
+    function updateProjectsDots() {
+        var cards = container.querySelectorAll('.project-card');
+        var dots = dotsContainer.querySelectorAll('.projects-dot');
+        var containerRect = container.getBoundingClientRect();
+        cards.forEach(function(card, index) {
+            var rect = card.getBoundingClientRect();
+            // Карточка видна, если хотя бы частично попадает в окно контейнера
+            var isVisible = rect.right > containerRect.left && rect.left < containerRect.right;
+            if (isVisible) {
+                dots[index].classList.add('active');
+            } else {
+                dots[index].classList.remove('active');
+            }
         });
     }
+    updateProjectsDots();  // начальное состояние
 }
 
 // Прокрутка к карточке проекта по индексу (клик по точке)
