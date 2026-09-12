@@ -3,212 +3,558 @@
 <head>
     <meta charset="UTF-8">
     <style>
+        /* ──────────────────────────────────────────────
+           Резервные CSS-переменные (для автономного
+           просмотра вне основной страницы).
+           При загрузке через innerHTML в модалку
+           наследуются переменные из theme.css.
+           ────────────────────────────────────────────── */
         :root {
-            --project-bg: #0a0f14;
-            --project-accent: #2dd4bf;
+            --bg-main: #1b1e24;
+            --card-bg: rgba(21, 23, 28, 0.85);
+            --accent-primary: #106b6e;
+            --accent-hover: #148f93;
+            --accent-dark: #0e4b4e;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-body: #f8fafc;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(16, 107, 110, 0.5);
         }
 
-        .project-content {
-            background: var(--project-bg);
-            color: #fff;
-            padding: 2rem;
-            border-radius: 12px;
-            position: relative;
-            min-height: 400px;
+        /* ════════════════════════════════════════════════
+           Фиксируем модалку: 80% ширина, 85vh высота,
+           НЕТ скроллбара — контент подгоняется под экран.
+           ════════════════════════════════════════════════ */
+        .modal-container {
+            max-width: 80vw !important;
+            width: 80vw !important;
+            max-height: 85vh !important;
+            height: 85vh !important;
+            overflow-y: hidden !important;
+            display: flex !important;
+            flex-direction: column !important;
+            padding: 1.5rem !important;
+        }
+
+        /* Заголовок/подзаголовок модалки — не сжимаются */
+        .modal-title,
+        .modal-subtitle {
+            flex-shrink: 0;
+        }
+
+        /* Галерея (контейнер проекта) — занимает всё
+           оставшееся место, без внутреннего скролла */
+        .modal-gallery {
+            flex: 1 1 0 !important;
+            min-height: 0 !important;
+            overflow: hidden !important;
+            margin: 0.5rem 0 0 0 !important;
+        }
+
+        /* Скрываем пустые блоки под галереей */
+        .modal-description,
+        .modal-tags,
+        #modalLinkContainer {
+            display: none !important;
+        }
+
+        /* ── Контейнер проекта ── */
+        .tp-content {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            gap: 1.25rem;
+            overflow: hidden;
         }
 
-        .project-inner {
-            max-width: 800px;
-            width: 100%;
+        /* ════════════════════════════════════════════════
+           Текстовый блок (бирюзовый) — вверху, не сжимается
+           ════════════════════════════════════════════════ */
+        .tp-text-block {
+            flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(16, 107, 110, 0.18), rgba(14, 75, 78, 0.06));
+            border: 1px solid var(--border-hover);
+            border-radius: 12px;
+            padding: 1.25rem 1.75rem;
         }
 
-        .project-inner h3 {
-            font-size: 2rem;
-            color: var(--project-accent);
-            margin-bottom: 1rem;
-            text-shadow: 0 0 10px rgba(45, 212, 191, 0.3);
+        .tp-text-block h3 {
+            font-size: 1.5rem;
+            color: var(--accent-hover);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(20, 143, 147, 0.3);
         }
 
-        .project-inner p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #a0aec0;
-            margin-bottom: 2rem;
+        .tp-text-block p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            white-space: pre-line;
         }
 
-        /* Слайдер */
-        .slider-container {
-            width: 100%;
-            margin: 1.5rem 0;
-            position: relative;
-        }
-
-        .slider {
+        /* ════════════════════════════════════════════════
+           Галерея — flex: 1, занимает всё оставшееся место
+           ════════════════════════════════════════════════ */
+        .tp-gallery {
+            flex: 1 1 0;
+            min-height: 0;
             display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            gap: 1rem;
-            padding-bottom: 1.5rem;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .slider::-webkit-scrollbar {
-            display: none;
-        }
-
-        .slide {
-            flex: 0 0 100%;
-            scroll-snap-align: start;
-        }
-
-        .slide img {
-            max-width: 100%;
-            border-radius: 8px;
-            border: 1px solid rgba(45, 212, 191, 0.3);
-            box-shadow: 0 0 20px rgba(45, 212, 191, 0.2);
-            transition: transform 0.3s ease;
-        }
-
-        .slide img:hover {
-            transform: scale(1.02);
-        }
-
-        /* Точки навигации */
-        .slider-dots {
-            display: flex;
-            justify-content: center;
+            flex-direction: column;
             gap: 0.75rem;
-            margin-top: 0.5rem;
         }
 
-        .slider-dots .dot {
+        .tp-gallery-row {
+            flex: 1 1 0;
+            min-height: 0;
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 1.25rem;
+        }
+
+        /* ── Миниатюры (зелёные блоки слева/справа) ── */
+        .tp-thumb-wrapper {
+            flex: 0 0 13%;
+            min-width: 0;
+            height: 100%;
+            position: relative;
+            cursor: pointer;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 12px rgba(16, 107, 110, 0.25);
+            background: linear-gradient(135deg, rgba(16, 107, 110, 0.1), rgba(14, 75, 78, 0.04));
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        .tp-thumb-wrapper:hover {
+            border-color: var(--accent-hover);
+            box-shadow: 0 0 20px rgba(20, 143, 147, 0.4);
+            transform: scale(1.03);
+        }
+
+        .tp-thumb-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.5;
+            transition: opacity 0.25s ease;
+        }
+
+        .tp-thumb-wrapper:hover img {
+            opacity: 0.85;
+        }
+
+        .tp-thumb-arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.6rem;
+            color: var(--accent-hover);
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            opacity: 0.8;
+            transition: opacity 0.25s ease;
+        }
+
+        .tp-thumb-wrapper:hover .tp-thumb-arrow {
+            opacity: 1;
+        }
+
+        /* ── Главное изображение (центр) ── */
+        .tp-main-wrapper {
+            flex: 1 1 auto;
+            min-width: 0;
+            min-height: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--accent-hover);
+            box-shadow: 0 0 24px rgba(20, 143, 147, 0.3);
+            background: linear-gradient(135deg, rgba(16, 107, 110, 0.12), rgba(14, 75, 78, 0.04));
+            position: relative;
+            cursor: zoom-in;
+        }
+
+        .tp-main-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            transition: opacity 0.3s ease;
+        }
+
+        .tp-main-wrapper:hover img {
+            opacity: 0.92;
+        }
+
+        /* Иконка лупы в углу активного изображения */
+        .tp-zoom-hint {
+            position: absolute;
+            bottom: 0.6rem;
+            right: 0.6rem;
+            background: rgba(20, 143, 147, 0.75);
+            color: #fff;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .tp-main-wrapper:hover .tp-zoom-hint {
+            opacity: 1;
+        }
+
+        /* ── Точки навигации ── */
+        .tp-dots {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .tp-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: rgba(45, 212, 191, 0.3);
+            background: rgba(255, 255, 255, 0.2);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
             border: 1px solid transparent;
         }
 
-        .slider-dots .dot:hover {
-            background: rgba(45, 212, 191, 0.6);
+        .tp-dot:hover {
+            background: rgba(20, 143, 147, 0.5);
             transform: scale(1.2);
         }
 
-        .slider-dots .dot.active {
-            background: var(--project-accent);
-            border-color: var(--project-accent);
-            box-shadow: 0 0 10px var(--project-accent);
+        .tp-dot.active {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+            box-shadow: 0 0 10px var(--accent-hover);
         }
 
-        /* Анимации */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* ════════════════════════════════════════════════
+           Лайтбокс — полноэкранный просмотр изображения
+           ════════════════════════════════════════════════ */
+        .tp-lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
 
-        .project-inner h3 {
-            animation: fadeIn 0.6s ease-out;
+        .tp-lightbox.active {
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        .project-inner p {
-            animation: fadeIn 0.8s ease-out;
+        .tp-lightbox img {
+            max-width: 92vw;
+            max-height: 90vh;
+            border-radius: 10px;
+            border: 2px solid var(--accent-hover);
+            box-shadow: 0 0 40px rgba(20, 143, 147, 0.4);
+            object-fit: contain;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
         }
 
-        .slider-container {
-            animation: fadeIn 1s ease-out;
+        .tp-lightbox.active img {
+            transform: scale(1);
         }
+
+        .tp-lightbox-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(20, 143, 147, 0.6);
+            border: 1px solid var(--border-hover);
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, transform 0.2s ease;
+            z-index: 3001;
+        }
+
+        .tp-lightbox-close:hover {
+            background: var(--accent-hover);
+            transform: scale(1.1);
+        }
+
+        /* ── Адаптивность ── */
+        @media (max-width: 768px) {
+            .modal-container {
+                max-width: 92vw !important;
+                width: 92vw !important;
+                padding: 1rem !important;
+            }
+            .tp-gallery-row {
+                gap: 0.75rem;
+            }
+            .tp-thumb-wrapper {
+                flex: 0 0 16%;
+            }
+            .tp-thumb-arrow {
+                font-size: 1.2rem;
+            }
+            .tp-text-block {
+                padding: 0.85rem 1rem;
+            }
+            .tp-text-block h3 {
+                font-size: 1.2rem;
+            }
+            .tp-text-block p {
+                font-size: 0.9rem;
+            }
+            .tp-content {
+                gap: 0.75rem;
+            }
+        }
+
+        /* ── Анимация появления ── */
+        @keyframes tpFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .tp-text-block { animation: tpFadeIn 0.5s ease-out; }
+        .tp-gallery    { animation: tpFadeIn 0.7s ease-out; }
     </style>
 </head>
 <body>
-    <div class="project-content">
-        <div class="project-inner">
-            <h3>TowerDefense</h3>
-            <p>
-                Инди-проект, над которым я работаю в свободное время.
-                Это башенная защита с уникальной механикой, разработанная на Unity с использованием
-                современных технологий, таких как ShaderGraph и URP для создания потрясающей графики.
-            </p>
 
-            <div class="slider-container">
-                <div class="slider" id="slider">
-                    <div class="slide">
-                        <img src="projects/Media/Tower_Defense.gif" alt="TowerDefense - скриншот 1">
-                    </div>
-                    <div class="slide">
-                        <img src="projects/Media/Tower_Defense_2.gif" alt="TowerDefense - скриншот 2">
-                    </div>
-                    <div class="slide">
-                        <img src="projects/Media/Tower_Defense_2.gif" alt="TowerDefense - скриншот 3">
-                    </div>
-                </div>
-                <div class="slider-dots" id="sliderDots"></div>
-            </div>
-        </div>
+    <!-- ═══════════════════════════════════════════════════
+         Лайтбокс (полноэкранный просмотр)
+         ═══════════════════════════════════════════════════ -->
+    <div class="tp-lightbox" id="tpLightbox" onclick="tpCloseLightbox(); event.stopPropagation()">
+        <button class="tp-lightbox-close" onclick="event.stopPropagation(); tpCloseLightbox()">&times;</button>
+        <img id="tpLightboxImg" src="" alt="Просмотр изображения" onclick="event.stopPropagation()">
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const slider = document.getElementById('slider');
-            const dotsContainer = document.getElementById('sliderDots');
-            const slides = slider.querySelectorAll('.slide');
+    <!-- ═══════════════════════════════════════════════════
+         Скрытый bootstrap-img (data URI, грузится всегда).
+         Поскольку <script> НЕ выполняется при вставке через
+         innerHTML, вся логика галереи определяется здесь
+         в onload. При автономном просмотре также сработает
+         <script> ниже — конфликт исключён флагом __tpReady.
+         ═══════════════════════════════════════════════════ -->
+    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+         alt="" style="display:none" onload="
+        if (window.__tpReady) return;
+        window.__tpReady = true;
+        (function () {
+            var imgs = [
+                'projects/Media/Tower_Defense.gif',
+                'projects/Media/Tower_Defense_2.gif'
+            ];
+            var idx = 0, n = imgs.length;
 
-            // Создаём точки навигации
-            slides.forEach((_, index) => {
-                const dot = document.createElement('span');
-                dot.classList.add('dot');
-                if (index === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => {
-                    scrollToSlide(index);
-                });
-                dotsContainer.appendChild(dot);
-            });
-
-            // Прокрутка к слайду
-            function scrollToSlide(index) {
-                const slide = slides[index];
-                if (slide) {
-                    slider.scrollTo({
-                        left: slide.offsetLeft - slider.offsetLeft,
-                        behavior: 'smooth'
-                    });
-
-                    // Обновляем активную точку
-                    const dots = dotsContainer.querySelectorAll('.dot');
-                    dots.forEach((dot, i) => {
-                        dot.classList.toggle('active', i === index);
-                    });
+            function render() {
+                var main = document.getElementById('tpMain');
+                if (!main) return;
+                main.src = imgs[idx];
+                document.getElementById('tpPrev').src = imgs[(idx - 1 + n) % n];
+                document.getElementById('tpNext').src = imgs[(idx + 1) % n];
+                var dots = document.getElementById('tpDots');
+                if (!dots.children.length) {
+                    for (var k = 0; k < n; k++) {
+                        var s = document.createElement('span');
+                        s.className = 'tp-dot';
+                        s.onclick = (function (x) { return function () { tpGo(x); }; })(k);
+                        dots.appendChild(s);
+                    }
+                }
+                for (var k = 0; k < n; k++) {
+                    dots.children[k].className = 'tp-dot' + (k === idx ? ' active' : '');
                 }
             }
 
-            // Обновляем активную точку при прокрутке
-            slider.addEventListener('scroll', () => {
-                const dots = dotsContainer.querySelectorAll('.dot');
-                let activeIndex = 0;
+            window.tpNav = function (d) { idx = (idx + d + n) % n; render(); };
+            window.tpGo = function (x) { idx = x; render(); };
 
-                slides.forEach((slide, index) => {
-                    const rect = slide.getBoundingClientRect();
-                    const sliderRect = slider.getBoundingClientRect();
-                    const isVisible = rect.left >= sliderRect.left && rect.right <= sliderRect.right;
+            /* Лайтбокс: открыть / закрыть */
+            window.tpOpenLightbox = function () {
+                var lb = document.getElementById('tpLightbox');
+                var lbImg = document.getElementById('tpLightboxImg');
+                var main = document.getElementById('tpMain');
+                if (!lb || !lbImg || !main) return;
+                lbImg.src = main.src;
+                lb.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+            window.tpCloseLightbox = function () {
+                var lb = document.getElementById('tpLightbox');
+                if (!lb) return;
+                lb.classList.remove('active');
+                document.body.style.overflow = '';
+            };
 
-                    if (isVisible) {
-                        activeIndex = index;
-                    }
-                });
-
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === activeIndex);
-                });
+            /* Закрытие лайтбокса по Escape */
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') tpCloseLightbox();
             });
-        });
+
+            /* Авто-закрытие лайтбокса при закрытии модалки */
+            var modalEl = document.getElementById('projectModal');
+            if (modalEl && typeof MutationObserver !== 'undefined') {
+                var observer = new MutationObserver(function (mutations) {
+                    mutations.forEach(function (m) {
+                        if (m.attributeName === 'class' &&
+                            !modalEl.classList.contains('active')) {
+                            tpCloseLightbox();
+                        }
+                    });
+                });
+                observer.observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+            }
+
+            render();
+        })();
+    ">
+
+    <!-- ═══════════════════════════════════════════════════
+         Контент проекта
+         ═══════════════════════════════════════════════════ -->
+    <div class="tp-content">
+
+        <!-- Бирюзовый текстовый блок -->
+        <div class="tp-text-block">
+            <h3>TowerDefense</h3>
+            <p>Инди-проект, над которым я работаю в свободное время.
+Это башенная защита с уникальной механикой, разработанная на Unity с использованием современных технологий, таких как ShaderGraph и URP для создания потрясающей графики.</p>
+        </div>
+
+        <!-- Галерея: [превью] [активное] [превью] -->
+        <div class="tp-gallery">
+            <div class="tp-gallery-row">
+
+                <!-- Миниатюра предыдущего изображения -->
+                <div class="tp-thumb-wrapper" onclick="tpNav(-1)">
+                    <img id="tpPrev" src="projects/Media/Tower_Defense_2.gif"
+                         alt="TowerDefense — предыдущее"
+                         onerror="this.onerror=null;this.style.opacity='0'">
+                    <span class="tp-thumb-arrow">&#9664;</span>
+                </div>
+
+                <!-- Активное изображение (центр) — клик = лайтбокс -->
+                <div class="tp-main-wrapper" onclick="tpOpenLightbox()">
+                    <img id="tpMain" src="projects/Media/Tower_Defense.gif"
+                         alt="TowerDefense — скриншот 1"
+                         onerror="this.onerror=null;this.style.opacity='0'">
+                    <span class="tp-zoom-hint">&#128269; Развернуть</span>
+                </div>
+
+                <!-- Миниатюра следующего изображения -->
+                <div class="tp-thumb-wrapper" onclick="tpNav(1)">
+                    <img id="tpNext" src="projects/Media/Tower_Defense_2.gif"
+                         alt="TowerDefense — следующее"
+                         onerror="this.onerror=null;this.style.opacity='0'">
+                    <span class="tp-thumb-arrow">&#9654;</span>
+                </div>
+
+            </div>
+            <!-- Точки навигации -->
+            <div class="tp-dots" id="tpDots"></div>
+        </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         Script — выполняется при автономном просмотре
+         и если openModal в script.js реинжектит скрипты.
+         Дублирует логику из onload bootstrap.
+         ═══════════════════════════════════════════════════ -->
+    <script>
+        (function () {
+            if (window.__tpReady) return;
+            window.__tpReady = true;
+
+            var imgs = [
+                'projects/Media/Tower_Defense.gif',
+                'projects/Media/Tower_Defense_2.gif'
+            ];
+            var idx = 0, n = imgs.length;
+
+            function render() {
+                var main = document.getElementById('tpMain');
+                if (!main) return;
+                main.src = imgs[idx];
+                document.getElementById('tpPrev').src = imgs[(idx - 1 + n) % n];
+                document.getElementById('tpNext').src = imgs[(idx + 1) % n];
+                var dots = document.getElementById('tpDots');
+                if (!dots.children.length) {
+                    for (var k = 0; k < n; k++) {
+                        var s = document.createElement('span');
+                        s.className = 'tp-dot';
+                        s.onclick = (function (x) { return function () { window.tpGo(x); }; })(k);
+                        dots.appendChild(s);
+                    }
+                }
+                for (var k = 0; k < n; k++) {
+                    dots.children[k].className = 'tp-dot' + (k === idx ? ' active' : '');
+                }
+            }
+
+            window.tpNav = function (d) { idx = (idx + d + n) % n; render(); };
+            window.tpGo = function (x) { idx = x; render(); };
+
+            window.tpOpenLightbox = function () {
+                var lb = document.getElementById('tpLightbox');
+                var lbImg = document.getElementById('tpLightboxImg');
+                var main = document.getElementById('tpMain');
+                if (!lb || !lbImg || !main) return;
+                lbImg.src = main.src;
+                lb.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+            window.tpCloseLightbox = function () {
+                var lb = document.getElementById('tpLightbox');
+                if (!lb) return;
+                lb.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') window.tpCloseLightbox();
+            });
+
+            var modalEl = document.getElementById('projectModal');
+            if (modalEl && typeof MutationObserver !== 'undefined') {
+                var observer = new MutationObserver(function (mutations) {
+                    mutations.forEach(function (m) {
+                        if (m.attributeName === 'class' &&
+                            !modalEl.classList.contains('active')) {
+                            window.tpCloseLightbox();
+                        }
+                    });
+                });
+                observer.observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+            }
+
+            render();
+        })();
     </script>
+
 </body>
 </html>
