@@ -534,21 +534,23 @@
                 document.body.style.overflow = '';
             };
 
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') window.tpCloseLightbox();
-            });
-
-            var modalEl = document.getElementById('projectModal');
-            if (modalEl && typeof MutationObserver !== 'undefined') {
-                var observer = new MutationObserver(function (mutations) {
-                    mutations.forEach(function (m) {
-                        if (m.attributeName === 'class' &&
-                            !modalEl.classList.contains('active')) {
-                            window.tpCloseLightbox();
-                        }
-                    });
+            if (!window.__tpListenersAdded) {
+                window.__tpListenersAdded = true;
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') window.tpCloseLightbox();
                 });
-                observer.observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+                var modalEl = document.getElementById('projectModal');
+                if (modalEl && typeof MutationObserver !== 'undefined') {
+                    var observer = new MutationObserver(function (mutations) {
+                        mutations.forEach(function (m) {
+                            if (m.attributeName === 'class' &&
+                                !modalEl.classList.contains('active')) {
+                                window.tpCloseLightbox();
+                            }
+                        });
+                    });
+                    observer.observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+                }
             }
 
             render();
