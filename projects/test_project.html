@@ -347,8 +347,8 @@
     <!-- ═══════════════════════════════════════════════════
          Лайтбокс (полноэкранный просмотр)
          ═══════════════════════════════════════════════════ -->
-    <div class="tp-lightbox" id="tpLightbox" onclick="tpCloseLightbox()">
-        <button class="tp-lightbox-close" onclick="tpCloseLightbox()">&times;</button>
+    <div class="tp-lightbox" id="tpLightbox" onclick="tpCloseLightbox(); event.stopPropagation()">
+        <button class="tp-lightbox-close" onclick="event.stopPropagation(); tpCloseLightbox()">&times;</button>
         <img id="tpLightboxImg" src="" alt="Просмотр изображения" onclick="event.stopPropagation()">
     </div>
 
@@ -411,6 +411,23 @@
             document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape') tpCloseLightbox();
             });
+
+            /* Авто-закрытие лайтбокса при закрытии модалки.
+               script.js не выполняется при innerHTML-вставке,
+               поэтому MutationObserver — единственный способ
+           отследить удаление класса 'active' у #projectModal. */
+            var modalEl = document.getElementById('projectModal');
+            if (modalEl && typeof MutationObserver !== 'undefined') {
+                var observer = new MutationObserver(function (mutations) {
+                    mutations.forEach(function (m) {
+                        if (m.attributeName === 'class' &&
+                            !modalEl.classList.contains('active')) {
+                            tpCloseLightbox();
+                        }
+                    });
+                });
+                observer.observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+            }
 
             render();
         })();
@@ -523,6 +540,19 @@
             document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape') window.tpCloseLightbox();
             });
+
+            var modalEl = document.getElementById('projectModal');
+            if (modalEl && typeof MutationObserver !== 'undefined') {
+                var observer = new MutationObserver(function (mutations) {
+                    mutations.forEach(function (m) {
+                        if (m.attributeName === 'class' &&
+                            !modalEl.classList.contains('active')) {
+                            window.tpCloseLightbox();
+                        }
+                    });
+                });
+                observer.observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+            }
 
             render();
         })();
