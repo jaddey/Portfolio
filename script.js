@@ -134,6 +134,64 @@ function renderProjectsGrid(containerId, projects) {
             </div>
         `;
     }).join('');
+
+    // Создаём или обновляем точки навигации
+    let dotsContainer = document.getElementById('projects-dots');
+    if (!dotsContainer) {
+        dotsContainer = document.createElement('div');
+        dotsContainer.className = 'projects-dots';
+        dotsContainer.id = 'projects-dots';
+        container.parentNode.appendChild(dotsContainer);
+    }
+    dotsContainer.innerHTML = projects.map((_, i) =>
+        `<span class="projects-dot${i === 0 ? ' active' : ''}" onclick="scrollToProjectCard(${i})"></span>`
+    ).join('');
+
+    // Колесо мыши → горизонтальная прокрутка (когда мышь над блоком)
+    if (!container.__wheelAdded) {
+        container.__wheelAdded = true;
+        container.addEventListener('wheel', function(e) {
+            if (e.deltaY === 0) return;
+            var maxScroll = container.scrollWidth - container.clientWidth;
+            if (maxScroll <= 0) return;
+            if (container.scrollLeft <= 0 && e.deltaY < 0) return;
+            if (container.scrollLeft >= maxScroll && e.deltaY > 0) return;
+            e.preventDefault();
+            container.scrollLeft += e.deltaY;
+        }, { passive: false });
+    }
+
+    // Обновление активной точки при прокрутке
+    if (!container.__scrollAdded) {
+        container.__scrollAdded = true;
+        container.addEventListener('scroll', function() {
+            var cards = container.querySelectorAll('.project-card');
+            var dots = dotsContainer.querySelectorAll('.projects-dot');
+            var activeIndex = 0;
+            cards.forEach(function(card, index) {
+                var rect = card.getBoundingClientRect();
+                var containerRect = container.getBoundingClientRect();
+                if (rect.left >= containerRect.left - card.offsetWidth / 2) {
+                    activeIndex = index;
+                }
+            });
+            dots.forEach(function(dot, i) {
+                dot.classList.toggle('active', i === activeIndex);
+            });
+        });
+    }
+}
+
+// Прокрутка к карточке проекта по индексу (клик по точке)
+function scrollToProjectCard(index) {
+    var container = document.getElementById('projects-list');
+    var cards = container.querySelectorAll('.project-card');
+    if (cards[index]) {
+        container.scrollTo({
+            left: cards[index].offsetLeft - container.offsetLeft,
+            behavior: 'smooth'
+        });
+    }
 }
 
 // Open project modal
