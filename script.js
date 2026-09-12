@@ -113,7 +113,7 @@ function renderSubmodules(containerId, items) {
     }).join('');
 }
 
-// Render projects grid
+// Render projects grid (горизонтальная прокрутка + точки)
 function renderProjectsGrid(containerId, projects) {
     const container = document.getElementById(containerId);
     if (!projects || projects.length === 0) return;
@@ -147,11 +147,13 @@ function renderProjectsGrid(containerId, projects) {
         `<span class="projects-dot${i === 0 ? ' active' : ''}" onclick="scrollToProjectCard(${i})"></span>`
     ).join('');
 
-    // Колесо мыши → горизонтальная прокрутка (когда мышь над блоком)
-    // ВСЕГДА перехватываем — страница не скроллится пока курсор над блоком
-    if (!container.__wheelAdded) {
-        container.__wheelAdded = true;
-        container.addEventListener('wheel', function(e) {
+    // Колесо мыши → горизонтальная прокрутка (когда мышь над карточкой «Мои работы»)
+    // Слушатель висит на ВСЕЙ карточке (#card-projects), не только на .projects-grid
+    // ВСЕГДА перехватываем — страница не скроллится пока курсор над карточкой
+    var cardEl = document.getElementById('card-projects');
+    if (cardEl && !cardEl.__wheelAdded) {
+        cardEl.__wheelAdded = true;
+        cardEl.addEventListener('wheel', function(e) {
             if (e.deltaY === 0) return;
             var maxScroll = container.scrollWidth - container.clientWidth;
             if (maxScroll <= 0) return;  // нечего листать — отдаём странице
@@ -171,7 +173,6 @@ function renderProjectsGrid(containerId, projects) {
         var containerRect = container.getBoundingClientRect();
         cards.forEach(function(card, index) {
             var rect = card.getBoundingClientRect();
-            // Карточка видна, если хотя бы частично попадает в окно контейнера
             var isVisible = rect.right > containerRect.left && rect.left < containerRect.right;
             if (isVisible) {
                 dots[index].classList.add('active');
@@ -180,7 +181,7 @@ function renderProjectsGrid(containerId, projects) {
             }
         });
     }
-    updateProjectsDots();  // начальное состояние
+    updateProjectsDots();
 }
 
 // Прокрутка к карточке проекта по индексу (клик по точке)
