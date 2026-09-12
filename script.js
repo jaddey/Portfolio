@@ -158,7 +158,7 @@ function renderProjectsGrid(containerId, projects) {
             var maxScroll = container.scrollWidth - container.clientWidth;
             if (maxScroll <= 0) return;  // нечего листать — отдаём странице
             e.preventDefault();
-            container.scrollLeft += e.deltaY;
+            container.scrollLeft += e.deltaY * 3;
         }, { passive: false });
     }
 
