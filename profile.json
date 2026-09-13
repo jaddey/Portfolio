@@ -49,6 +49,15 @@
   "htmlFile": "projects/test_project.html",
   "tags": ["Test"]
 },
+        {
+      "title": "Nettle",
+      "subtitle": "Developer",
+      "date": "2022-2026",
+      "previewImg": "projects/Media/Chernigovskaya_night.png",
+      "description": "Несколько скриншотов проектов над которыми я работал, с последнего рабочего места.",
+      "htmlFile": "projects/Nettle.html",
+      "tags": ["Unity","C#","Tech Art","CRM Integration","JSON/XML Parsing","Bakery","Editor Scripting","NavMesh","Optimization","Confluence","Client Support"]
+    },
     {
       "title": "TowerDefense",
       "subtitle": "Developer",
